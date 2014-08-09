@@ -154,3 +154,10 @@ alias flip='pushd_builtin'
 PATH=$PATH:$HOME/bin
 
 
+git_completion=/usr/local/git/contrib/completion
+
+if [ -e $git_completion ];
+then
+	source /usr/local/git/contrib/completion/git-completion.bash
+	source /usr/local/git/contrib/completion/git-prompt.sh
+fi
