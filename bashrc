@@ -69,7 +69,7 @@ user_color=$green
 color_prompt=yes
 if [ "$color_prompt" = yes ]; then
 
-    PS1='${debian_chroot:+($debian_chroot)}[\[$reset\]\[$bold$user_color\]\u\[$reset$bold\]@\[$green\]\h\[$reset$bold\]:\[$cyan\]\W\[$reset\]]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}[\[$reset\]\[$bold$user_color\]\u\[$reset$bold\]@\[$red\]\h\[$reset$bold\]:\[$cyan\]\W\[$reset\]]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}[\u@\h:\W\[\033[1;36m\]$(__git_ps1)\[\033[0m\]]$ '
 fi
