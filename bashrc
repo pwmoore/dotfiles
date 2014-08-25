@@ -53,8 +53,23 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+reset=`tput sgr0`
+bold=`tput bold`
+black=`tput setaf 0`
+red=`tput setaf 1`
+green=`tput setaf 2`
+yellow=`tput setaf 3`
+blue=`tput setaf 4`
+magenta=`tput setaf 5`
+cyan=`tput setaf 6`
+white=`tput setaf 7`
+user_color=$green
+[ "$UID" -eq 0 ] && { user_color=$red; }
+
+color_prompt=yes
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+    PS1='${debian_chroot:+($debian_chroot)}[\[$reset\]\[$bold$user_color\]\u\[$reset$bold\]@\[$green\]\h\[$reset$bold\]:\[$cyan\]\W\[$reset\]]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}[\u@\h:\W\[\033[1;36m\]$(__git_ps1)\[\033[0m\]]$ '
 fi
