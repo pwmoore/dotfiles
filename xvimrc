@@ -1,0 +1,7 @@
+set ignorecase
+set smartcase
+set pasteboard
+set number
+
+nmap - :xccmd commentAndUncommentCurrentLines<CR>
+vmap - :xccmd commentAndUncommentCurrentLines<CR>
