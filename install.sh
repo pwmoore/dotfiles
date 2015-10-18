@@ -35,15 +35,64 @@ install()
 	fi
 }
 
+install_homebrew()
+{
+	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+}
+
+install_python()
+{
+	echo "[X] Unsupported"
+}
+
+install_ubuntu()
+{
+	debs=(build-essential linux-headers-`uname -r` vim)
+}
+
+install_linux()
+{
+	distro=`cat /etc/os-release | grep NAME | grep -v CPE_NAME | grep -v PRETTY_NAME | cut -d '=' -f 2 | tr -d \"`
+	case $distro in
+		Ubuntu)
+			install_ubuntu
+			;;
+		*)
+			echo "[X] $distro is not supported"
+			;;
+	esac
+}
+
+install_freebsd()
+{
+	echo "[X] FreeBSD is not supported"
+}
+
+install_darwin()
+{
+	install_homebrew
+	if [ $? -ne 0 ];
+	then
+		ret=$?
+		echo "[!] Could not install homebrew!"
+		exit $ret
+	fi
+
+	formulae=(git vim llvm libimobiledevice)
+
+	brew install $formulae
+}
 
 os=`uname`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
 
 case $os in
 	Linux)
+		install_linux
 		files=(bashrc gdbinit vimrc vim tmux.conf)
 		;;
 	Darwin)
+		install_darwin
 		files=(bashrc profile vim vimrc xvimrc tmux.conf)
 		if [ -e $xcode_themes ];
 		then
@@ -52,6 +101,11 @@ case $os in
 			"[!] No $xcode_themes directory! Could not install Xcode.dvtcolortheme!"
 		fi
 		;;
+	FreeBSD)
+		install_freebsd
+		files=(bashrc gdbinit vimrc vim tmux.conf)
+		;;
+
 	*)
 	;;
 esac
