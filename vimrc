@@ -77,6 +77,7 @@ set backup
 set undofile 
 set undolevels=1000
 set undoreload=10000
+set undodir=$HOME/.vim/.vimundo//
 set backupdir=$HOME/.vim/.vimbackup//
 set directory=$HOME/.vim/.vimswap//
 set viewdir=$HOME/.vim/.vimviews//
@@ -84,6 +85,7 @@ set viewdir=$HOME/.vim/.vimviews//
 silent execute '!mkdir -p $HOME/.vim/.vimbackup'
 silent execute '!mkdir -p $HOME/.vim/.vimswap'
 silent execute '!mkdir -p $HOME/.vim/.vimviews'
+silent execute '!mkdir -p $HOME/.vim/.vimundo'
 au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
@@ -102,18 +104,27 @@ set whichwrap=b,s,h,l,<,>,[,]
 set scrolljump=5
 set scrolloff=3
 set foldenable
+set foldmethod=indent
+set foldlevel=99
 
 let asmsyntax="nasm"
 
+autocmd BufNewFile,BufRead *.sb set filetype=scheme
+autocmd BufNewFile,BufRead *.m set filetype=objc
+autocmd BufNewFile,BufRead *.s let asmsytnax='armasm'|let filetype_inc='armasm'
+autocmd BufNewFile,BufRead *.asm let asmsytnax='nasm'
 autocmd FileType * set noexpandtab
-autocmd FileType c,cpp set ts=4 sw=4 expandtab smarttab cindent
+autocmd FileType c,cpp,objc set ts=4 sw=4 expandtab smarttab cindent
 autocmd FileType javascript set ts=4 sw=4 expandtab smarttab cindent
-autocmd FileType python set ts=4 sw=4 expandtab smarttab autoindent
+autocmd FileType python set ts=4 sw=4 noexpandtab smarttab autoindent
 autocmd FileType asm set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType nasm set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType c set formatoptions+=ro
 autocmd FileType html set ts=4 sw=4 expandtab smarttab
+autocmd FileType sh set ts=4 sw=4 expandtab smarttab
 autocmd FileType make set noexpandtab sw=8
+autocmd FileType scheme set ts=2 sw=2 expandtab smarttab
+autocmd FileType ruby set ts=4 sw=4 expandtab smarttab autoindent
 
 autocmd FileType * let b:comment = "#"
 autocmd FileType asm let b:comment = ";"
@@ -122,31 +133,30 @@ autocmd FileType vim let b:comment = "\""
 autocmd FileType c let b:comment = '\/\/'
 autocmd FileType javascript let b:comment = '\/\/'
 
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType ruby set omnifunc=rubycomplete#Complete
+autocmd FileType ruby let g:rubycomplete_buffer_loading=1
+autocmd FileType ruby let g:rubycomplete_classes_in_global=1
+
 set wmh=0
 map <C-H> <C-W>h<C-W>_
 map <C-L> <C-W>l<C-W>_
 map <C-J> <C-W>j<C-W>_
 map <C-K> <C-W>k<C-W>_
 
-nmap <expr> - AddComment ()
-nmap <expr> _ RemoveComment ()
-vmap <expr> - AddComment ()
-vmap <expr> _ RemoveComment ()
+nmap - <C-_><C-_>
+vmap - <C-_><C-_>
 
+let mapleader = ","
+nmap <leader>ne :NERDTree<cr>
+nmap <leader>nc :NERDTreeClose
 nmap <silent> <leader>/ :nohlsearch<CR>
-
-
-" Key mappings
-"inoremap {	{}<Left>i
-"inoremap {<CR>	{<CR>}<Esc>O
-"inoremap {{	{
-"inoremap {}	{}
-"inoremap "	""<Left>i
-"inoremap [	[]<Left>i
-"inoremap '	''<Left>i
-"inoremap (	()<Left>i
-"inoremap <expr> )	strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
-
+nmap <leader>h :tabprevious<cr>
+nmap <leader>l :tabnext<cr>
+nmap <leader>o :tabnew<cr>
+nmap <leader>c :tabclose<cr>
 
 function! ConditionalPairMap(open, close)
 	let line = getline('.')
@@ -161,7 +171,7 @@ inoremap <expr> ( ConditionalPairMap('(', ')')
 inoremap <expr> { ConditionalPairMap('{', '}')
 inoremap <expr> [ ConditionalPairMap('[', ']')
 "inoremap <expr> " ConditionalPairMap('"', '"')
-inoremap "	""<Left>
+"inoremap "	""<Left>
 inoremap {<CR>	{<CR>}<Esc>O
 
 nnoremap ; : 
@@ -177,3 +187,35 @@ func RemoveComment()
 endfunc
 
 execute pathogen#infect()
+colorscheme phil 
+vnoremap <C-c> "+y
+hi Normal ctermbg=16
+"set background=dark
+"colorscheme solarized
+" let g:ycm_global_ycm_extra_conf = "~/projects/dev/darwin_extra_conf.py" 
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+
+" let g:clang_use_library = 1
+" let g:clang_periodic_quickfix = 0
+" let g:clang_snippets = 1
+" let g:clang_snippets_engine = 'ultisnips'
+" let g:clang_library_path = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib"
+" let g:clang_exec = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+" let g:clang_complete_patterns = 1
+"
+" let g:syntastic_enable_signs = 1
+" let g:syntastic_objc_config_file = '.clang_complete'
+nnoremap <C-]> :YcmCompleter GoTo<CR>
+
+autocmd CompleteDone * pclose
+set completeopt-=preview
+" py << EOF
+" import os.path
+" import sys
+" import vim
+" lldbpython = '/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/Python'
+" sys.path.insert(0, lldbpython)
+" EOF

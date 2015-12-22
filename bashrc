@@ -53,6 +53,8 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
+
 reset=`tput sgr0`
 bold=`tput bold`
 black=`tput setaf 0`
@@ -97,6 +99,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # some more ls aliases
+alias ls="ls -G"
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
@@ -121,6 +124,8 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+os=`uname`
+
 alias grep='grep --color=auto --exclude=*.svn --exclude *.git'
 alias g='grep'
 alias gi='grep -i'
@@ -129,6 +134,14 @@ alias mkdir='mkdir -p -v'
 alias ping='ping -c 5'
 alias s='source ~/.bashrc'
 alias hexdump='hexdump -C'
+
+if [ $os -eq "Darwin" ];
+then
+    XC_PATH=`xcode-select -p`
+    IOS_SDK="$XC_PATH/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
+    OSX_SDK="$XC_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk"
+    XC_DATA=$HOME/Library/Developer/Xcode/DerivedData
+fi
 
 pushd()
 {
