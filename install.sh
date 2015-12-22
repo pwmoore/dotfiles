@@ -47,7 +47,14 @@ install_python()
 
 install_ubuntu()
 {
-	debs=(build-essential linux-headers-`uname -r` vim)
+    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
+    sudo apt-get install $debs > /dev/null
+    if [ $? -eq 0 ];
+    then
+        echo "[+] Installed $debs"
+    else
+        echo "[X] Could not install debs!"
+    fi
 }
 
 install_linux()
@@ -78,7 +85,7 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae=(git vim llvm libimobiledevice)
+	formulae="git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
 
 	brew install $formulae
 }
@@ -94,6 +101,8 @@ case $os in
 	Darwin)
 		install_darwin
 		files=(bashrc profile vim vimrc xvimrc tmux.conf)
+        cp phil.vim $HOME/.vim/colors
+        "[+] Copied OS X vim colorscheme to $HOME/.vim/colors"
 		if [ -e $xcode_themes ];
 		then
 			cp Xcode.dvtcolortheme $xcode_themes

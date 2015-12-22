@@ -187,7 +187,13 @@ func RemoveComment()
 endfunc
 
 execute pathogen#infect()
-colorscheme phil 
+
+if has("unix")
+  let s:uname = system("uname -s")
+  if s:uname == "Darwin"
+    colorscheme phil 
+endif
+endif
 vnoremap <C-c> "+y
 hi Normal ctermbg=16
 "set background=dark
