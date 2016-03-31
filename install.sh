@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 install_file ()
 {
 	old_file=$HOME/.$1
@@ -48,7 +49,7 @@ install_python()
 install_ubuntu()
 {
     debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
-    sudo apt-get install $debs > /dev/null
+    sudo apt-get install $debs
     if [ $? -eq 0 ];
     then
         echo "[+] Installed $debs"
@@ -59,7 +60,7 @@ install_ubuntu()
 
 install_linux()
 {
-	distro=`cat /etc/os-release | grep NAME | grep -v CPE_NAME | grep -v PRETTY_NAME | cut -d '=' -f 2 | tr -d \"`
+	distro=`cat /etc/os-release | grep "^NAME=" | cut -d '=' -f 2 | tr -d \"`
 	case $distro in
 		Ubuntu)
 			install_ubuntu
@@ -90,13 +91,14 @@ install_darwin()
 	brew install $formulae
 }
 
+
 os=`uname`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
 
 case $os in
 	Linux)
-		install_linux
 		files=(bashrc gdbinit vimrc vim tmux.conf)
+		install_linux
 		;;
 	Darwin)
 		install_darwin
