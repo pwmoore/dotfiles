@@ -135,7 +135,7 @@ alias ping='ping -c 5'
 alias s='source ~/.bashrc'
 alias hexdump='hexdump -C'
 
-if [ $os -eq "Darwin" ];
+if [ $os = "Darwin" ];
 then
     XC_PATH=`xcode-select -p`
     IOS_SDK="$XC_PATH/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
