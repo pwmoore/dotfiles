@@ -53,7 +53,7 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
+#alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
 
 reset=`tput sgr0`
 bold=`tput bold`
@@ -70,7 +70,6 @@ user_color=$green
 
 color_prompt=yes
 if [ "$color_prompt" = yes ]; then
-
     PS1='${debian_chroot:+($debian_chroot)}[\[$reset\]\[$bold$user_color\]\u\[$reset$bold\]@\[$red\]\h\[$reset$bold\]:\[$blue\]\W\[$reset\]]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}[\u@\h:\W\[\033[1;36m\]$(__git_ps1)\[\033[0m\]]$ '
@@ -97,9 +96,14 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+os=`uname`
 
+if [ $os = "Darwin" ];
+then
 # some more ls aliases
-alias ls="ls -G"
+    alias ls="ls -G"
+else
+    alias ls="ls --color=auto"
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
@@ -124,7 +128,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-os=`uname`
 
 alias grep='grep --color=auto --exclude=*.svn --exclude *.git'
 alias g='grep'
@@ -135,7 +138,7 @@ alias ping='ping -c 5'
 alias s='source ~/.bashrc'
 alias hexdump='hexdump -C'
 
-if [ $os -eq "Darwin" ];
+if [ $os = "Darwin" ];
 then
     XC_PATH=`xcode-select -p`
     IOS_SDK="$XC_PATH/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
@@ -178,9 +181,19 @@ fi
 alias cd='pushd'
 alias b='popd'
 alias flip='pushd_builtin'
+alias isdk='xcrun --sdk iphoneos --show-sdk-path'
+alias msdk='xcrun --sdk macosx --show-sdk-path'
+alias 2='python2'
+alias 3='python3'
+alias py='ipython3'
 
 PATH=$PATH:$HOME/bin
-
+NDK="$HOME/bin/android-ndk-r10e"
+PI="$HOME/bin/gcc-arm-none-eabi-5_2-2015q4/bin"
+AVR="/Applications/Arduino.app/Contents/Java/hardware/tools/avr"
+AVR_BIN="$AVR/bin"
+AVR_LIB="$AVR/avr/lib"
+AVR_INC="$AVR/avr/include"
 
 git_completion=/usr/local/git/contrib/completion
 

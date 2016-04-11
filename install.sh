@@ -48,7 +48,7 @@ install_python()
 install_ubuntu()
 {
     debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
-    sudo apt-get install $debs > /dev/null
+    sudo apt-get install $debs 
     if [ $? -eq 0 ];
     then
         echo "[+] Installed $debs"
@@ -73,6 +73,11 @@ install_linux()
 install_freebsd()
 {
 	echo "[X] FreeBSD is not supported"
+}
+
+install_openbsd()
+{
+    echo "[X] OpenBSD is not supported"
 }
 
 install_darwin()
