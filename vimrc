@@ -206,24 +206,7 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 
-" let g:clang_use_library = 1
-" let g:clang_periodic_quickfix = 0
-" let g:clang_snippets = 1
-" let g:clang_snippets_engine = 'ultisnips'
-" let g:clang_library_path = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib"
-" let g:clang_exec = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
-" let g:clang_complete_patterns = 1
-"
-" let g:syntastic_enable_signs = 1
-" let g:syntastic_objc_config_file = '.clang_complete'
 nnoremap <C-]> :YcmCompleter GoTo<CR>
 
 autocmd CompleteDone * pclose
 set completeopt-=preview
-" py << EOF
-" import os.path
-" import sys
-" import vim
-" lldbpython = '/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/Python'
-" sys.path.insert(0, lldbpython)
-" EOF

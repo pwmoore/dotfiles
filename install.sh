@@ -76,6 +76,11 @@ install_freebsd()
 	echo "[X] FreeBSD is not supported"
 }
 
+install_openbsd()
+{
+    echo "[X] OpenBSD is not supported"
+}
+
 install_darwin()
 {
 	install_homebrew
