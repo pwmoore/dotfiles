@@ -191,11 +191,13 @@ execute pathogen#infect()
 if has("unix")
   let s:uname = system("uname -s")
   if s:uname == "Darwin"
+    hi Normal ctermbg=16
     colorscheme phil 
+  else
+    colorscheme default
 endif
 endif
 vnoremap <C-c> "+y
-hi Normal ctermbg=16
 "set background=dark
 "colorscheme solarized
 " let g:ycm_global_ycm_extra_conf = "~/projects/dev/darwin_extra_conf.py" 
