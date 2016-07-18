@@ -135,6 +135,12 @@ install_darwin()
 	brew install $formulae
 }
 
+install_vim()
+{
+    https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    vim +PluginInstall +qall
+}
+
 get_python
 
 os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
@@ -182,5 +188,7 @@ for f in ${files[@]}
 do
 	install $f
 done
+
+install_vim
 
 source $HOME/.bashrc

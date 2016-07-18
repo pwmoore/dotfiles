@@ -53,12 +53,23 @@ if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
 
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/syntastic'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
+call vundle#end()
+
 if has("autocmd")
   filetype indent on
   filetype plugin on
 endif
 
-set nocompatible
 set wrap
 set showmode
 set showcmd
@@ -185,8 +196,6 @@ endfunc
 func RemoveComment()
   return ':s/^\(\s*\)/' . b:comment . "/\\1/\r:nohl\r"
 endfunc
-
-execute pathogen#infect()
 
 if has("unix")
   let s:uname = system("uname -s")
