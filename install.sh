@@ -141,6 +141,17 @@ os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
 git config --global core.editor "vim"
 
+ssh_dir="$HOME/.ssh"
+if [ ! -e $ssh_dir ];
+then
+    mkdir -p $ssh_dir
+fi
+
+if [ ! -e $ssh_dir/id_rsa ];
+then
+    ssh-keygen -f $ssh_dir/id_rsa -N ""
+fi
+
 case $os in
 	Linux)
 		files=(bashrc gdbinit vimrc vim tmux.conf)
