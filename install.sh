@@ -46,10 +46,46 @@ install_python()
 	echo "[X] Unsupported"
 }
 
-install_ubuntu()
+fn_distro(){
+	arch=$(uname -m)
+	kernel=$(uname -r)
+	if [ -f /etc/lsb-release ]; then
+			os=$(lsb_release -s -d)
+	elif [ -f /etc/debian_version ]; then
+			os="Debian $(cat /etc/debian_version)"
+	elif [ -f /etc/redhat-release ]; then
+			os=`cat /etc/redhat-release`
+	else
+			os="$(uname -s) $(uname -r)"
+	fi
+}
+py=""
+get_python()
 {
+	py=`which python`	
+	if [ $? -ne 0 ];
+	then
+		py=`which python3`
+	fi
+}
+
+install_fedora()
+{
+	packages="ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
+    sudo dnf install -y $packages
+    if [ $? -eq 0 ];
+    then
+        echo "[+] Installed $packages"
+    else
+        echo "[X] Could not install debs!"
+    fi
+}
+
+install_debian()
+{
+    sudo apt update
     debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
-    sudo apt-get install $debs
+    sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
         echo "[+] Installed $debs"
@@ -60,10 +96,13 @@ install_ubuntu()
 
 install_linux()
 {
-	distro=`cat /etc/os-release | grep "^NAME=" | cut -d '=' -f 2 | tr -d \"`
+    distro=`"$py" -c "import platform; print(platform.linux_distribution()[0])"`
 	case $distro in
-		Ubuntu)
-			install_ubuntu
+		Ubuntu|debian)
+			install_debian
+			;;
+		Fedora)
+			install_fedora
 			;;
 		*)
 			echo "[X] $distro is not supported"
@@ -96,9 +135,11 @@ install_darwin()
 	brew install $formulae
 }
 
+get_python
 
-os=`uname`
+os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
+git config --global core.editor "vim"
 
 case $os in
 	Linux)
@@ -119,7 +160,7 @@ case $os in
 		;;
 	FreeBSD)
 		install_freebsd
-		files=(bashrc gdbinit vimrc vim tmux.conf)
+		files=(bashrc profile gdbinit vimrc vim tmux.conf)
 		;;
 
 	*)
