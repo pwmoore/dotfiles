@@ -52,8 +52,12 @@ if [ -n "$force_color_prompt" ]; then
 	color_prompt=
     fi
 fi
+os=`uname`
 
-#alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
+if [ $os != "Darwin" ];
+then
+    alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
+fi
 
 reset=`tput sgr0`
 bold=`tput bold`
@@ -96,7 +100,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-os=`uname`
 
 if [ $os = "Darwin" ];
 then
