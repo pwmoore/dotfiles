@@ -141,6 +141,14 @@ install_vim()
     vim +PluginInstall +qall
 }
 
+install_ycm()
+{
+    cwd=$PWD
+    cd ~/.vim/bundle/YouCompleteMe
+    ./install.py --clang-completer
+    cd $cwd
+}
+
 get_python
 
 os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
@@ -190,5 +198,6 @@ do
 done
 
 install_vim
+install_ycm
 
 source $HOME/.bashrc
