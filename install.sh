@@ -98,7 +98,7 @@ install_linux()
 {
     distro=`"$py" -c "import platform; print(platform.linux_distribution()[0])"`
 	case $distro in
-		Ubuntu|debian)
+		Ubuntu|debian|LinuxMint)
 			install_debian
 			;;
 		Fedora)
