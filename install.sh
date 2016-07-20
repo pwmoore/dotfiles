@@ -84,7 +84,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
+    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -137,7 +137,7 @@ install_darwin()
 
 install_vim()
 {
-    https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     vim +PluginInstall +qall
 }
 
