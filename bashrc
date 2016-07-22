@@ -52,12 +52,8 @@ if [ -n "$force_color_prompt" ]; then
 	color_prompt=
     fi
 fi
-os=`uname`
 
-if [ $os != "Darwin" ];
-then
-    alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
-fi
+#alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/ (\1)/'"
 
 reset=`tput sgr0`
 bold=`tput bold`
@@ -100,6 +96,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+os=`uname`
 
 if [ $os = "Darwin" ];
 then
@@ -190,23 +187,30 @@ alias 2='python2'
 alias 3='python3'
 alias py='ipython3'
 
-NDK="$HOME/bin/android-ndk-r10e"
-PI="$HOME/bin/gcc-arm-none-eabi-5_2-2015q4/bin"
+LOCAL_ROOT="$HOME/root"
+LOCAL_BIN="$LOCAL_ROOT/bin"
+
+NDK="$LOCAL_BIN/android-ndk-r10e"
 if [ $os = "Darwin" ];
 then
     AVR="/Applications/Arduino.app/Contents/Java/hardware/tools/avr"
 else
-    AVR="/usr/share/arduino/hardware/tools/avr"
+    AVR="/usr/lib/avr"
 fi
 AVR_BIN="$AVR/bin"
 AVR_LIB="$AVR/avr/lib"
 AVR_INC="$AVR/avr/include"
-ANDROID_SDK_PATH="/home/pwm/Android/Sdk"
+ANDROID_SDK_PATH="$LOCAL_BIN/Android/SDK"
+ANDROID_NDK_PATH="$LOCAL_BIN/Android/NDK"
+ANDROID_NDK_BIN="$ANDROID_NDK_PATH"
+ANDROID_X86_64_BIN="$ANDROID_NDK_PATH/toolchains/x86_64-4.9/prebuilt/linux-x86_64/bin"
+ANDROID_ARM_BIN="$ANDROID_NDK_PATH/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
+ANDROID_AARCH64_BIN="$ANDROID_NDK_PATH/toolchains/aarch64-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
 ANDROID_BUILD_TOOLS="$ANDROID_SDK_PATH/build-tools/23.0.3"
 ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_PATH/platform-tools"
 ANDROID_TOOLS="$ANDROID_SDK_PATH/tools"
-ANDROID_BIN="$ANDROID_BUILD_TOOLS:$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS"
-PATH="$PATH:$HOME/bin:$AVR_BIN"
+ANDROID_BIN="$ANDROID_BUILD_TOOLS:$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_NDK_BIN:$ANDROID_AARCH64_BIN:$ANDROID_ARM_BIN:$ANDROID_X86_64_BIN"
+PATH="$LOCAL_BIN:$PATH:$AVR_BIN:$ANDROID_BIN"
 
 
 git_completion=/usr/local/git/contrib/completion

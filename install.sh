@@ -84,7 +84,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
+    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -98,7 +98,7 @@ install_linux()
 {
     distro=`"$py" -c "import platform; print(platform.linux_distribution()[0])"`
 	case $distro in
-		Ubuntu|debian)
+		Ubuntu|debian|LinuxMint)
 			install_debian
 			;;
 		Fedora)
@@ -137,8 +137,16 @@ install_darwin()
 
 install_vim()
 {
-    https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     vim +PluginInstall +qall
+}
+
+install_ycm()
+{
+    cwd=$PWD
+    cd ~/.vim/bundle/YouCompleteMe
+    ./install.py --clang-completer
+    cd $cwd
 }
 
 get_python
@@ -190,5 +198,6 @@ do
 done
 
 install_vim
+install_ycm
 
 source $HOME/.bashrc
