@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/pwm/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -102,6 +102,8 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 
+export TERM=xterm-256color
+
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
@@ -128,13 +130,13 @@ alias egrep='egrep --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias grep='grep --color=auto --exclude=*.svn --exclude *.git'
+alias grep='grep --color=auto'
 alias g='grep'
 alias gi='grep -i'
 alias gr='grep -R'
 alias mkdir='mkdir -p -v'
 alias ping='ping -c 5'
-alias s='source ~/.bashrc'
+alias s='source ~/.zshrc'
 alias hexdump='hexdump -C'
 
 pushd ()
