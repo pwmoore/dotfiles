@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/pwm/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -76,8 +76,10 @@ fi
 
 if [ $os = "Darwin" ];
 then
+    alias ls='ls -G'
     export AVR="/Applications/Arduino.app/Contents/Java/hardware/tools/avr"
 else
+    alias ls='ls --color'
     export AVR="/usr/share/arduino/hardware/tools/avr"
 fi
 export LOCAL_ROOT="$HOME/root"
@@ -101,6 +103,8 @@ source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
+
+export TERM=xterm-256color
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -128,13 +132,13 @@ alias egrep='egrep --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias grep='grep --color=auto --exclude=*.svn --exclude *.git'
+alias grep='grep --color=auto'
 alias g='grep'
 alias gi='grep -i'
 alias gr='grep -R'
 alias mkdir='mkdir -p -v'
 alias ping='ping -c 5'
-alias s='source ~/.bashrc'
+alias s='source ~/.zshrc'
 alias hexdump='hexdump -C'
 
 pushd ()
@@ -170,9 +174,6 @@ then
 fi
 alias b='popd > /dev/null'
 alias flip='pushd_builtin'
-alias ls='ls -G'
-alias isdk='xcrun --sdk iphoneos --show-sdk-path'
-alias msdk='xcrun --sdk macosx --show-sdk-path'
 alias 2='python2'
 alias 3='python3'
 alias py='ipython3'
