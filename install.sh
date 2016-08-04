@@ -137,6 +137,8 @@ install_darwin()
 
 install_vim()
 {
+    mkdir -p "$HOME/.vim/{autoload,bundle,colors}"
+    cp philcolors.vim $HOME/.vim/colors
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     vim +PluginInstall +qall
 }
@@ -147,6 +149,17 @@ install_ycm()
     cd ~/.vim/bundle/YouCompleteMe
     ./install.py --clang-completer
     cd $cwd
+}
+
+install_tpm()
+{
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+}
+
+install_omz()
+{ 
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    cp phil.zsh-theme ~/.oh-my-zsh/themes
 }
 
 get_python
@@ -168,13 +181,12 @@ fi
 
 case $os in
 	Linux)
-		files=(bashrc gdbinit vimrc vim tmux.conf)
+		files=(zshrc bashrc gdbinit vimrc tmux.conf)
 		install_linux
 		;;
 	Darwin)
 		install_darwin
-		files=(bashrc profile vim vimrc xvimrc tmux.conf)
-        cp phil.vim $HOME/.vim/colors
+		files=(zshrc bashrc profile vimrc xvimrc tmux.conf)
         "[+] Copied OS X vim colorscheme to $HOME/.vim/colors"
 		if [ -e $xcode_themes ];
 		then
@@ -185,7 +197,7 @@ case $os in
 		;;
 	FreeBSD)
 		install_freebsd
-		files=(bashrc profile gdbinit vimrc vim tmux.conf)
+		files=(bashrc profile gdbinit vimrc tmux.conf)
 		;;
 
 	*)
@@ -199,5 +211,7 @@ done
 
 install_vim
 install_ycm
+install_tpm
+install_omz
 
 source $HOME/.bashrc
