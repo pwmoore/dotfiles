@@ -1,4 +1,5 @@
 import os
+import imp
 import platform
 import ycm_core
 import subprocess
@@ -19,24 +20,43 @@ class YCMLogger:
 
 log = None
 
+def get_project_conf(flags):
+	home = os.environ['HOME']
+	curdir = os.getcwd()
+	log.write('Starting search for project conf')
+	while curdir != home:
+		log.write('Searching %s' % curdir)
+		files = os.listdir(curdir)
+		if '.ycm_project_conf.py' in files:
+			path = os.getcwd() + os.path.sep + '.ycm_project_conf.py'
+			log.write('Found project conf %s' % path)
+			mod = imp.load_source('project_conf', path)
+			import project_conf
+			log.write('Loaded project_conf')
+			return mod.get_project_conf(flags, log)
+		parent = os.path.abspath(curdir + os.path.sep + os.pardir)
+		log.write('Moving up to %s' % parent)
+		curdir = parent
+	return flags
+
 def get_darwin_flags():
   global log
-  flags = []
-  p = subprocess.Popen(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  out,err = p.communicate('')
-  sdk_path = out.strip()
-  log.write('Got sdk_path=%s' % sdk_path) 
-  fw_path = sdk_path + '/System/Library/Frameworks'
-  frameworks = os.listdir(fw_path)
-  log.write('Got framework path=%s' % fw_path)
-  for fw in frameworks:
-    fwname = fw.replace('.framework', '')
-    fwhdr = fw_path + '/%s/Headers' % fw
-    flags.append('-framework')
-    flags.append(fwname)
-    flags.append('-I')
-    flags.append(fwhdr)
-    log.write('Added framework %s' % fwname)
+  flags = ['-framework', 'CoreFoundation', '-framework', 'IOKit', '-framework', 'Foundation', '-framework', 'SDL2', '-I', '/Library/Frameworks/SDL2.framework/Headers/']
+  # p = subprocess.Popen(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  # out,err = p.communicate('')
+  # sdk_path = out.strip()
+  # log.write('Got sdk_path=%s' % sdk_path) 
+  # fw_path = sdk_path + '/System/Library/Frameworks'
+  # frameworks = os.listdir(fw_path)
+  # log.write('Got framework path=%s' % fw_path)
+  # for fw in frameworks:
+  #   fwname = fw.replace('.framework', '')
+  #   fwhdr = fw_path + '/%s/Headers' % fw
+  #   flags.append('-framework')
+  #   flags.append(fwname)
+  #   flags.append('-I')
+  #   flags.append(fwhdr)
+  #   log.write('Added framework %s' % fwname)
   return flags
 
 def get_platform_flags():
@@ -51,12 +71,12 @@ def get_platform_flags():
 def get_lang_flags(filetype):
   cflags = ['-std=gnu11', '-x', '-c']
   cppflags = ['-std=c++11', '-x', 'c++']
-  objcflags = ['-fblocks', '-fobjc-arc', '-fobjc-exceptions', '-fexceptions', '-fobjc-runtime=macosx-10.9.0', '-fencode-extended-block-signature', '-x', 'objective-c']
+  objcflags = ['-std=gnu11', '-fblocks', '-fobjc-arc', '-fobjc-exceptions', '-fexceptions', '-fobjc-runtime=macosx-10.9.0', '-fencode-extended-block-signature', '-x', 'objective-c']
   if filetype == 'c':
     return cflags
   elif filetype == 'cpp':
     return cppflags
-  elif ext == 'objc':
+  elif filetype == 'objc':
     return objcflags
   else:
     return []
@@ -148,7 +168,9 @@ def FlagsForFile( filename, **kwargs ):
     '-I',
     '.',
     '-I',
-    '/usr/local/include'
+    '/usr/local/include',
+	'-I',
+	'/usr/include'
   ]
   log = YCMLogger(debug=True)
   data = kwargs['client_data']
@@ -159,6 +181,7 @@ def FlagsForFile( filename, **kwargs ):
   platform_flags = get_platform_flags()
   log.write('Got platform flags')
   flags = base_flags + filetype_flags + platform_flags
+  flags = get_project_conf(flags)
 
   relative_to = DirectoryOfThisScript()
   final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
