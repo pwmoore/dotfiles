@@ -100,10 +100,10 @@ os=`uname`
 
 if [ $os = "Darwin" ];
 then
-# some more ls aliases
     alias ls="ls -G"
 else
     alias ls="ls --color=auto"
+fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
@@ -142,8 +142,10 @@ if [ $os = "Darwin" ];
 then
     XC_PATH=`xcode-select -p`
     IOS_SDK="$XC_PATH/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
-    OSX_SDK="$XC_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk"
-    XC_DATA=$HOME/Library/Developer/Xcode/DerivedData
+    OSX_SDK="$XC_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk"
+    XC_DATA="$HOME/Library/Developer/Xcode/DerivedData"
+    alias isdk='xcrun --sdk iphoneos --show-sdk-path'
+    alias msdk='xcrun --sdk macosx --show-sdk-path'
 fi
 
 pushd()
@@ -181,19 +183,35 @@ fi
 alias cd='pushd'
 alias b='popd'
 alias flip='pushd_builtin'
-alias isdk='xcrun --sdk iphoneos --show-sdk-path'
-alias msdk='xcrun --sdk macosx --show-sdk-path'
 alias 2='python2'
 alias 3='python3'
 alias py='ipython3'
 
-PATH=$PATH:$HOME/bin
-NDK="$HOME/bin/android-ndk-r10e"
-PI="$HOME/bin/gcc-arm-none-eabi-5_2-2015q4/bin"
-AVR="/Applications/Arduino.app/Contents/Java/hardware/tools/avr"
+LOCAL_ROOT="$HOME/root"
+LOCAL_BIN="$LOCAL_ROOT/bin"
+
+NDK="$LOCAL_BIN/android-ndk-r10e"
+if [ $os = "Darwin" ];
+then
+    AVR="/Applications/Arduino.app/Contents/Java/hardware/tools/avr"
+else
+    AVR="/usr/lib/avr"
+fi
 AVR_BIN="$AVR/bin"
 AVR_LIB="$AVR/avr/lib"
 AVR_INC="$AVR/avr/include"
+ANDROID_SDK_PATH="$LOCAL_BIN/Android/SDK"
+ANDROID_NDK_PATH="$LOCAL_BIN/Android/NDK"
+ANDROID_NDK_BIN="$ANDROID_NDK_PATH"
+ANDROID_X86_64_BIN="$ANDROID_NDK_PATH/toolchains/x86_64-4.9/prebuilt/linux-x86_64/bin"
+ANDROID_ARM_BIN="$ANDROID_NDK_PATH/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
+ANDROID_AARCH64_BIN="$ANDROID_NDK_PATH/toolchains/aarch64-linux-androideabi-4.9/prebuilt/linux-x86_64/bin"
+ANDROID_BUILD_TOOLS="$ANDROID_SDK_PATH/build-tools/23.0.3"
+ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_PATH/platform-tools"
+ANDROID_TOOLS="$ANDROID_SDK_PATH/tools"
+ANDROID_BIN="$ANDROID_BUILD_TOOLS:$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_NDK_BIN:$ANDROID_AARCH64_BIN:$ANDROID_ARM_BIN:$ANDROID_X86_64_BIN"
+PATH="$LOCAL_BIN:$PATH:$AVR_BIN:$ANDROID_BIN"
+
 
 git_completion=/usr/local/git/contrib/completion
 

@@ -46,10 +46,46 @@ install_python()
 	echo "[X] Unsupported"
 }
 
-install_ubuntu()
+fn_distro(){
+	arch=$(uname -m)
+	kernel=$(uname -r)
+	if [ -f /etc/lsb-release ]; then
+			os=$(lsb_release -s -d)
+	elif [ -f /etc/debian_version ]; then
+			os="Debian $(cat /etc/debian_version)"
+	elif [ -f /etc/redhat-release ]; then
+			os=`cat /etc/redhat-release`
+	else
+			os="$(uname -s) $(uname -r)"
+	fi
+}
+py=""
+get_python()
 {
-    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python3 python3-pip tmux vim"
-    sudo apt-get install $debs
+	py=`which python`	
+	if [ $? -ne 0 ];
+	then
+		py=`which python3`
+	fi
+}
+
+install_fedora()
+{
+	packages="ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
+    sudo dnf install -y $packages
+    if [ $? -eq 0 ];
+    then
+        echo "[+] Installed $packages"
+    else
+        echo "[X] Could not install debs!"
+    fi
+}
+
+install_debian()
+{
+    sudo apt update
+    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim"
+    sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
         echo "[+] Installed $debs"
@@ -60,10 +96,13 @@ install_ubuntu()
 
 install_linux()
 {
-	distro=`cat /etc/os-release | grep "^NAME=" | cut -d '=' -f 2 | tr -d \"`
+    distro=`"$py" -c "import platform; print(platform.linux_distribution()[0])"`
 	case $distro in
-		Ubuntu)
-			install_ubuntu
+		Ubuntu|debian|LinuxMint)
+			install_debian
+			;;
+		Fedora)
+			install_fedora
 			;;
 		*)
 			echo "[X] $distro is not supported"
@@ -96,19 +135,58 @@ install_darwin()
 	brew install $formulae
 }
 
+install_vim()
+{
+    mkdir -p "$HOME/.vim/{autoload,bundle,colors}"
+    cp philcolors.vim $HOME/.vim/colors
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    vim +PluginInstall +qall
+}
 
-os=`uname`
+install_ycm()
+{
+    cwd=$PWD
+    cd ~/.vim/bundle/YouCompleteMe
+    ./install.py --clang-completer
+    cd $cwd
+}
+
+install_tpm()
+{
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+}
+
+install_omz()
+{ 
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    cp phil.zsh-theme ~/.oh-my-zsh/themes
+}
+
+get_python
+
+os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
+git config --global core.editor "vim"
+
+ssh_dir="$HOME/.ssh"
+if [ ! -e $ssh_dir ];
+then
+    mkdir -p $ssh_dir
+fi
+
+if [ ! -e $ssh_dir/id_rsa ];
+then
+    ssh-keygen -f $ssh_dir/id_rsa -N ""
+fi
 
 case $os in
 	Linux)
-		files=(bashrc gdbinit vimrc vim tmux.conf)
+		files=(zshrc bashrc gdbinit vimrc tmux.conf)
 		install_linux
 		;;
 	Darwin)
 		install_darwin
-		files=(bashrc profile vim vimrc xvimrc tmux.conf)
-        cp phil.vim $HOME/.vim/colors
+		files=(zshrc bashrc profile vimrc xvimrc tmux.conf)
         "[+] Copied OS X vim colorscheme to $HOME/.vim/colors"
 		if [ -e $xcode_themes ];
 		then
@@ -119,7 +197,7 @@ case $os in
 		;;
 	FreeBSD)
 		install_freebsd
-		files=(bashrc gdbinit vimrc vim tmux.conf)
+		files=(bashrc profile gdbinit vimrc tmux.conf)
 		;;
 
 	*)
@@ -130,5 +208,10 @@ for f in ${files[@]}
 do
 	install $f
 done
+
+install_vim
+install_ycm
+install_tpm
+install_omz
 
 source $HOME/.bashrc
