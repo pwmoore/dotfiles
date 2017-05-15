@@ -84,7 +84,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim"
+    debs="ack-grep build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim zsh liblua5.1-0-dev liblua5.2-dev liblua5.3-dev lua5.1 lua5.2 lua5.3 curl"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -137,22 +137,36 @@ install_darwin()
 
 install_vim()
 {
-    mkdir -p "$HOME/.vim/{autoload,bundle,colors}"
+    mkdir -p $HOME/.vim/autoload
+	mkdir -p $HOME/.vim/bundle
+	mkdir -p $HOME/.vim/colors
     cp philcolors.vim $HOME/.vim/colors
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    vim +PluginInstall +qall
+	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    vim +PlugInstall +qall
 }
 
 install_ycm()
 {
     cwd=$PWD
-    cd ~/.vim/bundle/YouCompleteMe
+    cd ~/.vim/plugged/YouCompleteMe
     ./install.py --clang-completer
+    cd $cwd
+}
+
+install_color_coded()
+{
+    cwd=$PWD
+    cd ~/.vim/bundle/color_coded
+	mkdir build && cd build
+	cmake ..
+	make && make install
+	make clean && make clean_clang
     cd $cwd
 }
 
 install_tpm()
 {
+	mkdir -p ~/.tmux/plugins
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 }
 
@@ -211,7 +225,8 @@ done
 
 install_vim
 install_ycm
+#install_color_coded
 install_tpm
 install_omz
 
-source $HOME/.bashrc
+source $HOME/.zshrc

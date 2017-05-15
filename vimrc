@@ -56,14 +56,19 @@ endif
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
-call vundle#end()
+"set rtp+=~/.vim/bundle/Vundle.vim
+call plug#begin()
+Plug 'VundleVim/Vundle.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'Valloric/YouCompleteMe'
+Plug 'SirVer/ultisnips'
+Plug 'jeaye/color_coded'
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
+Plug 'keith/swift.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'fatih/vim-go'
+call plug#end()
 
 if has("autocmd")
   filetype indent on
