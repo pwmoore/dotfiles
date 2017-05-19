@@ -56,18 +56,23 @@ endif
 set nocompatible
 filetype off
 
-"set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim
 call plug#begin()
 Plug 'VundleVim/Vundle.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'Valloric/YouCompleteMe'
 Plug 'SirVer/ultisnips'
-Plug 'jeaye/color_coded'
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
-Plug 'keith/swift.vim'
-Plug 'rust-lang/rust.vim'
+Plug 'Shirk/vim-gas'
+Plug 'vim-scripts/taglist.vim'
+Plug 'ervandew/supertab'
+Plug 'Shougo/unite.vim'
+Plug 'compnerd/arm64asm-vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'craigemery/vim-autotag'
+Plug 'b4winckler/vim-objc'
 Plug 'fatih/vim-go'
+Plug 'msanders/cocoa.vim'
 call plug#end()
 
 if has("autocmd")
@@ -129,10 +134,11 @@ autocmd BufNewFile,BufRead *.sb set filetype=scheme
 autocmd BufNewFile,BufRead *.m set filetype=objc
 autocmd BufNewFile,BufRead *.s let asmsytnax='armasm'|let filetype_inc='armasm'
 autocmd BufNewFile,BufRead *.asm let asmsytnax='nasm'
+autocmd BufNewFile,BufRead *.py set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType * set noexpandtab
 autocmd FileType c,cpp,objc set ts=4 sw=4 expandtab smarttab cindent
 autocmd FileType javascript set ts=4 sw=4 expandtab smarttab cindent
-autocmd FileType python set ts=4 sw=4 noexpandtab smarttab autoindent
+autocmd FileType python set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType asm set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType nasm set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType c set formatoptions+=ro
@@ -155,6 +161,12 @@ autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType ruby set omnifunc=rubycomplete#Complete
 autocmd FileType ruby let g:rubycomplete_buffer_loading=1
 autocmd FileType ruby let g:rubycomplete_classes_in_global=1
+
+let g:go_highlight_functions = 1  
+let g:go_highlight_methods = 1  
+let g:go_highlight_structs = 1  
+let g:go_highlight_operators = 1  
+let g:go_highlight_build_constraints = 1 
 
 set wmh=0
 map <C-H> <C-W>h<C-W>_
@@ -213,9 +225,7 @@ endif
 endif
 vnoremap <C-c> "+y
 "set background=dark
-"colorscheme solarized
-let g:ycm_global_ycm_extra_conf = "~/.ycm_extra_conf.py" 
-let g:ycm_extra_conf_vim_data = ['&filetype']
+" let g:ycm_global_ycm_extra_conf = "~/projects/dev/darwin_extra_conf.py" 
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_extra_conf_vim_data = [ '&filetype' ]
 let g:ycm_autoclose_preview_window_after_completion = 1
@@ -226,3 +236,4 @@ nnoremap <C-]> :YcmCompleter GoTo<CR>
 
 autocmd CompleteDone * pclose
 set completeopt-=preview
+colorscheme phil

@@ -71,7 +71,7 @@ get_python()
 
 install_fedora()
 {
-	packages="ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
+	packages="git ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
     sudo dnf install -y $packages
     if [ $? -eq 0 ];
     then
@@ -84,7 +84,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="ack-grep build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim zsh liblua5.1-0-dev liblua5.2-dev liblua5.3-dev lua5.1 lua5.2 lua5.3 curl"
+    debs="git ack-grep build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim zsh liblua5.1-0-dev liblua5.2-dev liblua5.3-dev lua5.1 lua5.2 lua5.3 curl"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -122,6 +122,7 @@ install_openbsd()
 
 install_darwin()
 {
+    xcode-select --install
 	install_homebrew
 	if [ $? -ne 0 ];
 	then
@@ -173,14 +174,15 @@ install_tpm()
 install_omz()
 { 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    cp zshrc $HOME/.zshrc
     cp phil.zsh-theme ~/.oh-my-zsh/themes
+    source $HOME/.zshrc
 }
 
 get_python
 
 os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
-git config --global core.editor "vim"
 
 ssh_dir="$HOME/.ssh"
 if [ ! -e $ssh_dir ];
@@ -223,6 +225,7 @@ do
 	install $f
 done
 
+git config --global core.editor "vim"
 install_vim
 install_ycm
 #install_color_coded
