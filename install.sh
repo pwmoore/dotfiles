@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+
+repo_dir="$HOME/git/dotfiles"
+install_repo()
+{
+    
+    mkdir -p $HOME/git
+    cd $HOME/git
+    git clone https://github.com/pwmoore/dotfiles.git
+}
+
 install_file ()
 {
 	old_file=$HOME/.$1
@@ -108,6 +118,7 @@ install_linux()
 			echo "[X] $distro is not supported"
 			;;
 	esac
+    install_repo
 }
 
 install_freebsd()
@@ -134,6 +145,7 @@ install_darwin()
 	formulae="git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
 
 	brew install $formulae
+    install_repo
 }
 
 install_vim()
@@ -180,6 +192,7 @@ install_omz()
 }
 
 get_python
+cur_dir="$PWD"
 
 os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
@@ -233,3 +246,4 @@ install_tpm
 install_omz
 
 source $HOME/.zshrc
+cd $cur_dir
