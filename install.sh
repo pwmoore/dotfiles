@@ -71,7 +71,7 @@ get_python()
 
 install_fedora()
 {
-	packages="ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
+	packages="git zsh ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
     sudo dnf install -y $packages
     if [ $? -eq 0 ];
     then
@@ -84,7 +84,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim"
+    debs="git zsh ack-grep build-essential cmake cmake-data git libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -122,6 +122,7 @@ install_openbsd()
 
 install_darwin()
 {
+    xcode-select --install
 	install_homebrew
 	if [ $? -ne 0 ];
 	then
@@ -130,7 +131,7 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
+	formulae="zsh git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
 
 	brew install $formulae
 }
@@ -166,7 +167,6 @@ get_python
 
 os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
-git config --global core.editor "vim"
 
 ssh_dir="$HOME/.ssh"
 if [ ! -e $ssh_dir ];
@@ -181,12 +181,12 @@ fi
 
 case $os in
 	Linux)
-		files=(zshrc bashrc gdbinit vimrc tmux.conf)
+		files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
 		install_linux
 		;;
 	Darwin)
 		install_darwin
-		files=(zshrc bashrc profile vimrc xvimrc tmux.conf)
+        files=(zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py)
         "[+] Copied OS X vim colorscheme to $HOME/.vim/colors"
 		if [ -e $xcode_themes ];
 		then
@@ -213,5 +213,5 @@ install_vim
 install_ycm
 install_tpm
 install_omz
+git config --global core.editor "vim"
 
-source $HOME/.bashrc
