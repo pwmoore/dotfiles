@@ -69,7 +69,7 @@ def get_platform_flags():
     return []
 
 def get_lang_flags(filetype):
-  cflags = ['-std=gnu11', '-x', '-c']
+  cflags = ['-std=gnu11', '-x', 'c']
   cppflags = ['-std=c++11', '-x', 'c++']
   objcflags = ['-std=gnu11', '-fblocks', '-fobjc-arc', '-fobjc-exceptions', '-fexceptions', '-fobjc-runtime=macosx-10.9.0', '-fencode-extended-block-signature', '-x', 'objective-c']
   if filetype == 'c':

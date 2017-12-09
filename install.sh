@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+
+repo_dir="$HOME/git/dotfiles"
+install_repo()
+{
+    
+    mkdir -p $HOME/git
+    cd $HOME/git
+    git clone https://github.com/pwmoore/dotfiles.git
+}
+
 install_file ()
 {
 	old_file=$HOME/.$1
@@ -71,7 +81,7 @@ get_python()
 
 install_fedora()
 {
-	packages="ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
+	packages="git zsh ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
     sudo dnf install -y $packages
     if [ $? -eq 0 ];
     then
@@ -84,7 +94,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="ack-grep build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim zsh liblua5.1-0-dev liblua5.2-dev liblua5.3-dev lua5.1 lua5.2 lua5.3 curl"
+    debs="git ack-grep build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim zsh liblua5.1-0-dev liblua5.2-dev liblua5.3-dev lua5.1 lua5.2 lua5.3 curl"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -108,6 +118,7 @@ install_linux()
 			echo "[X] $distro is not supported"
 			;;
 	esac
+    install_repo
 }
 
 install_freebsd()
@@ -122,6 +133,7 @@ install_openbsd()
 
 install_darwin()
 {
+    xcode-select --install
 	install_homebrew
 	if [ $? -ne 0 ];
 	then
@@ -130,9 +142,10 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
+	formulae="zsh git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
 
 	brew install $formulae
+    install_repo
 }
 
 install_vim()
@@ -173,14 +186,16 @@ install_tpm()
 install_omz()
 { 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    cp zshrc $HOME/.zshrc
     cp phil.zsh-theme ~/.oh-my-zsh/themes
+    source $HOME/.zshrc
 }
 
 get_python
+cur_dir="$PWD"
 
 os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
-git config --global core.editor "vim"
 
 ssh_dir="$HOME/.ssh"
 if [ ! -e $ssh_dir ];
@@ -195,12 +210,12 @@ fi
 
 case $os in
 	Linux)
-		files=(zshrc bashrc gdbinit vimrc tmux.conf)
+		files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
 		install_linux
 		;;
 	Darwin)
 		install_darwin
-		files=(zshrc bashrc profile vimrc xvimrc tmux.conf)
+        files=(zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py)
         "[+] Copied OS X vim colorscheme to $HOME/.vim/colors"
 		if [ -e $xcode_themes ];
 		then
@@ -223,10 +238,13 @@ do
 	install $f
 done
 
+git config --global core.editor "vim"
 install_vim
 install_ycm
 #install_color_coded
 install_tpm
 install_omz
+git config --global core.editor "vim"
 
 source $HOME/.zshrc
+cd $cur_dir
