@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-repo_dir="$HOME/git/dotfiles"
-install_repo()
-{
-    
-    mkdir -p $HOME/git
-    cd $HOME/git
-    git clone https://github.com/pwmoore/dotfiles.git
-}
-
 install_file ()
 {
 	old_file=$HOME/.$1
@@ -81,7 +72,7 @@ get_python()
 
 install_fedora()
 {
-	packages="git zsh ack cmake capstone capstone-devel kernel-headers-`uname -r` tmux python python-pip ctags vim"
+	packages="git zsh ack cmake kernel-headers-`uname -r` tmux python python-pip ctags vim"
     sudo dnf install -y $packages
     if [ $? -eq 0 ];
     then
@@ -94,7 +85,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="git ack-grep build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data libcapstone-dev libcapstone3 linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim zsh liblua5.1-0-dev liblua5.2-dev liblua5.3-dev lua5.1 lua5.2 lua5.3 curl"
+    debs="git ack build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -118,7 +109,6 @@ install_linux()
 			echo "[X] $distro is not supported"
 			;;
 	esac
-    install_repo
 }
 
 install_freebsd()
@@ -142,10 +132,9 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="zsh git vim llvm libimobiledevice cmake python python3 ctags tmux qemu usbmuxd ack-grep ack"
+	formulae="zsh capstone keystone unicorn reattach-to-user-namespace git libimobiledevice cmake cscope python3 ctags tmux qemu usbmuxd ack"
 
 	brew install $formulae
-    install_repo
 }
 
 install_vim()
@@ -160,21 +149,19 @@ install_vim()
 
 install_ycm()
 {
-    cwd=$PWD
     cd ~/.vim/plugged/YouCompleteMe
     ./install.py --clang-completer
-    cd $cwd
+    cd $cur_dir
 }
 
 install_color_coded()
 {
-    cwd=$PWD
     cd ~/.vim/bundle/color_coded
 	mkdir build && cd build
 	cmake ..
 	make && make install
 	make clean && make clean_clang
-    cd $cwd
+    cd $cur_dir
 }
 
 install_tpm()
@@ -189,6 +176,30 @@ install_omz()
     cp zshrc $HOME/.zshrc
     cp phil.zsh-theme ~/.oh-my-zsh/themes
     source $HOME/.zshrc
+}
+
+install_cku()
+{
+    mkdir -p "$HOME/git"
+    cd "$HOME/git"
+    git clone https://github.com/keystone-engine/keystone
+    cd keystone
+    mkdir build
+    cd build
+    ../make-share.sh
+    sudo make install
+    cd "$HOME/git"
+    git clone https://github.com/unicorn-engine/unicorn
+    cd unicorn
+    mkdir build
+    make.sh
+    sudo make.sh install
+    cd "$HOME/git"
+    git clone https://github.com/aquynh/capstone
+    cd capstone
+    make.sh
+    sudo make.sh install
+    cd $cur_dir
 }
 
 get_python
@@ -238,12 +249,12 @@ do
 	install $f
 done
 
-git config --global core.editor "vim"
 install_vim
 install_ycm
 #install_color_coded
 install_tpm
 install_omz
+install_cku
 git config --global core.editor "vim"
 
 source $HOME/.zshrc

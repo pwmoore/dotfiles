@@ -68,12 +68,13 @@ if [ $os = "Darwin" ];
 then
     export XC_PATH=`xcode-select -p`
     export IOS_SDK="$XC_PATH/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
-    export OSX_SDK="$XC_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk"
+    export OSX_SDK="$XC_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.sdk"
     export XC_DATA="$HOME/Library/Developer/Xcode/DerivedData"
     alias isdk='xcrun --sdk iphoneos --show-sdk-path'
     alias msdk='xcrun --sdk macosx --show-sdk-path'
 fi
 
+SWIFT_DIR=""
 if [ $os = "Darwin" ];
 then
     alias ls='ls -G'
@@ -81,6 +82,7 @@ then
 else
     alias ls='ls --color'
     export AVR="/usr/share/arduino/hardware/tools/avr"
+    SWIFT_DIR="/usr/local/swift/bin"
 fi
 export LOCAL_ROOT="$HOME/root"
 export LOCAL_BIN="$LOCAL_ROOT/bin"
@@ -93,8 +95,9 @@ export ANDROID_BUILD_TOOLS="$ANDROID_SDK_PATH/build-tools/23.0.3"
 export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_PATH/platform-tools"
 export ANDROID_TOOLS="$ANDROID_SDK_PATH/tools"
 export ANDROID_BIN="$ANDROID_BUILD_TOOLS:$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_AARCH64_BIN:$ANDROID_ARM_BIN"
-
-export PATH="$LOCAL_BIN:/usr/local/bin:$PATH:$PI:$AVR_BIN:$ANDROID_BIN"
+export GOROOT="/usr/local/go/bin"
+export GOPATH="$HOME/go"
+export PATH="$LOCAL_BIN:/usr/local/bin:$PATH:$PI:$AVR_BIN:$ANDROID_BIN:$GOROOT:$GOPATH:$SWIFT_DIR"
 
 #export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -165,7 +168,7 @@ popd ()
 
 if [ $UID -ne 0 ] ; 
 then
-    alias sudo='sudo '
+    alias sudo='sudo'
     alias scat='sudo cat'
     alias svim='sudo vim'
     alias root='sudo su'
