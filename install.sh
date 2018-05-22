@@ -85,7 +85,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="git ack build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl"
+    debs="git ack build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
