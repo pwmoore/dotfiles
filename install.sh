@@ -142,7 +142,7 @@ install_vim()
     mkdir -p $HOME/.vim/autoload
 	mkdir -p $HOME/.vim/bundle
 	mkdir -p $HOME/.vim/colors
-    cp philcolors.vim $HOME/.vim/colors
+    	cp phil.vim $HOME/.vim/colors
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     vim +PlugInstall +qall
 }
@@ -254,7 +254,7 @@ install_ycm
 #install_color_coded
 install_tpm
 install_omz
-install_cku
+#install_cku
 git config --global core.editor "vim"
 
 source $HOME/.zshrc

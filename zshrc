@@ -49,7 +49,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git brew python make)
+plugins=(git brew python)
 
 # User configuration
 #
@@ -84,7 +84,7 @@ else
     export AVR="/usr/share/arduino/hardware/tools/avr"
     SWIFT_DIR="/usr/local/swift/bin"
 fi
-export LOCAL_ROOT="$HOME/root"
+export LOCAL_ROOT="$HOME"
 export LOCAL_BIN="$LOCAL_ROOT/bin"
 export AVR_BIN="$AVR/bin"
 export AVR_LIB="$AVR/avr/lib"
