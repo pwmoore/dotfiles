@@ -20,13 +20,15 @@ endif
 
 let colors_name = "phil"
 
-hi Comment    cterm=NONE ctermfg=DarkBlue     gui=NONE guifg=red2
-hi Constant   cterm=NONE ctermfg=DarkRed     gui=NONE guifg=green3
-hi Identifier cterm=NONE ctermfg=DarkBlue    gui=NONE guifg=cyan4
-hi PreProc    cterm=NONE ctermfg=DarkMagenta gui=NONE guifg=magenta3
-hi Special    cterm=NONE ctermfg=DarkMagenta gui=NONE guifg=deeppink
-hi Statement  cterm=NONE ctermfg=Yellow	     gui=bold guifg=blue
-hi Type	      cterm=NONE ctermfg=DarkGreen gui=bold guifg=blue
-
+hi Comment    	cterm=NONE ctermfg=DarkBlue    gui=NONE 	guifg=red2
+hi Constant   	cterm=NONE ctermfg=DarkRed     gui=NONE 	guifg=green3
+hi Identifier 	cterm=NONE ctermfg=DarkBlue    gui=NONE 	guifg=cyan4
+hi PreProc    	cterm=NONE ctermfg=DarkMagenta gui=NONE 	guifg=magenta3
+hi Special    	cterm=NONE ctermfg=DarkMagenta gui=NONE 	guifg=deeppink
+hi Statement  	cterm=NONE ctermfg=Brown       gui=bold 	guifg=blue
+hi Type	      	cterm=NONE ctermfg=DarkGreen   gui=bold 	guifg=blue
+hi Directory  	cterm=NONE ctermfg=4	       			guifg=Blue
+hi CursorLineNr cterm=NONE ctermfg=Brown       			guifg=Brown
+hi LineNr 	cterm=NONE ctermfg=Brown       			guifg=Brown
 
 " vim: sw=2
