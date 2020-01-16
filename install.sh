@@ -260,7 +260,7 @@ install_ycm
 #install_color_coded
 install_tpm
 install_omz
-install_cku
+#install_cku
 git config --global core.editor "vim"
 
 source $HOME/.zshrc
