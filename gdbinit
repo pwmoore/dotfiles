@@ -5,6 +5,3 @@ set history expansion on
 
 set disassembly-flavor intel
 set pagination off
-
-source ~/bin/peda/peda.py
-

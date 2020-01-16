@@ -85,7 +85,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="git ack build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh"
+    debs="git ack build-essential libclang-3.9-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev libc6-i386 gcc-multilib mercurial subversion graphviz libpxman-1-dev bison flex"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -132,7 +132,7 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="zsh capstone keystone unicorn reattach-to-user-namespace git libimobiledevice cmake cscope python3 ctags tmux qemu usbmuxd ack"
+	formulae="zsh reattach-to-user-namespace git libimobiledevice cmake cscope python3 ctags tmux qemu usbmuxd ack"
 
 	brew install $formulae
 }
@@ -142,7 +142,7 @@ install_vim()
     mkdir -p $HOME/.vim/autoload
 	mkdir -p $HOME/.vim/bundle
 	mkdir -p $HOME/.vim/colors
-    cp philcolors.vim $HOME/.vim/colors
+    cp phil.vim $HOME/.vim/colors/phil.vim
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     vim +PlugInstall +qall
 }
@@ -176,6 +176,11 @@ install_omz()
     cp zshrc $HOME/.zshrc
     cp phil.zsh-theme ~/.oh-my-zsh/themes
     source $HOME/.zshrc
+}
+
+install_gef()
+{
+    wget -q -O- https://github.com/hugsy/gef/raw/master/scripts/gef.sh | sh
 }
 
 install_cku()
@@ -223,6 +228,7 @@ case $os in
 	Linux)
 		files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
 		install_linux
+        install_gef
 		;;
 	Darwin)
 		install_darwin
