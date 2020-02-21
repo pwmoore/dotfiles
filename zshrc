@@ -180,3 +180,6 @@ alias flip='pushd_builtin'
 alias 2='python2'
 alias 3='python3'
 alias py='ipython3'
+alias clone='git clone --recursive'
+
+export LSCOLORS="Exfxcxdxbxegedabagacad"
