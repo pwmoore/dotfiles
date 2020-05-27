@@ -1,239 +1,183 @@
-" All system-wide defaults are set in $VIMRUNTIME/debian.vim (usually just
-" /usr/share/vim/vimcurrent/debian.vim) and sourced by the call to :runtime
-" you can find below.  If you wish to change any of those settings, you should
-" do it in this file (/etc/vim/vimrc), since debian.vim will be overwritten
-" everytime an upgrade of the vim packages is performed.  It is recommended to
-" make changes after sourcing debian.vim since it alters the value of the
-" 'compatible' option.
-
-" This line should not be removed as it ensures that various options are
-" properly set to work with the Vim-related packages available in Debian.
-runtime! debian.vim
-
-" Uncomment the next line to make Vim more Vi-compatible
-" NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
-" options, so any other options should be set AFTER setting 'compatible'.
-"set compatible
-
-" Vim5 and later versions support syntax highlighting. Uncommenting the next
-" line enables syntax highlighting by default.
+" Set syntax on
 if has("syntax")
   syntax on
 endif
 
-" If using a dark background within the editing area and syntax highlighting
-" turn on this option as well
-"set background=dark
+" Use hljk to move between windows
+map <C-H> <C-W>h<C-W>_
+map <C-L> <C-W>l<C-W>_
+map <C-J> <C-W>j<C-W>_
+map <C-K> <C-W>k<C-W>_
 
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
-"if has("autocmd")
-"  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-"endif
-
-" Uncomment the following to have Vim load indentation rules and plugins
-" according to the detected filetype.
-"if has("autocmd")
-"  filetype plugin indent on
-"endif
-
-" The following are commented out as they cause vim to behave a lot
-" differently from regular Vi. They are highly recommended though.
-"set showcmd		" Show (partial) command in status line.
-"set showmatch		" Show matching brackets.
-"set ignorecase		" Do case insensitive matching
-"set smartcase		" Do smart case matching
-"set incsearch		" Incremental search
-"set autowrite		" Automatically save before commands like :next and :make
-"set hidden             " Hide buffers when they are abandoned
-"set mouse=a		" Enable mouse usage (all modes)
+" Use my own colorscheme
+colorscheme phil
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
 
+" Disable vi compatibility
 set nocompatible
-filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call plug#begin()
-Plug 'VundleVim/Vundle.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe'
-Plug 'SirVer/ultisnips'
-Plug 'Shirk/vim-gas'
-Plug 'vim-scripts/taglist.vim'
-Plug 'ervandew/supertab'
-Plug 'Shougo/unite.vim'
-Plug 'compnerd/arm64asm-vim'
-Plug 'tomtom/tcomment_vim'
-Plug 'craigemery/vim-autotag'
-Plug 'b4winckler/vim-objc'
-Plug 'fatih/vim-go'
-Plug 'msanders/cocoa.vim'
-call plug#end()
-
-if has("autocmd")
-  filetype indent on
-  filetype plugin on
-endif
-
+" Word wrap, making sure we don't break in the middle of words
 set wrap
-set showmode
-set showcmd
-set showmatch
-set smartcase
-set incsearch
-set mouse=a
-set history=100
-set wildmode=list:longest,full
-set shortmess+=r
-set title
-set hlsearch
+set linebreak
+
+" Turn on line numbers
 set number
 
+" Show the mode we are currently in
+set showmode
+
+" Make backspace behave properly
+set backspace=indent,eol,start
+
+" Disable modelines
+set modelines=0
+
+" Show command in statusline
+set showcmd
+
+" Show matching brackets
+set showmatch
+
+" Enable mouse usage
+set mouse=a
+
+" Set incremental search
+set incsearch
+
+" Set wildcard mode: list all matches, complete longest full match
+set wildmode=list:longest,full
+
+" Enable titlebar
+set title
+
+" Enable search highlighting
+set hlsearch
+
+" Enable backup files
 set backup
-set undofile 
+set backupdir=$HOME/.vim/.vimbackup
+set directory=$HOME/.vim/.vimswap
+set viewdir=$HOME/.vim/.vimviews
+
+" Undo stuff
+set undofile
 set undolevels=1000
 set undoreload=10000
-set undodir=$HOME/.vim/.vimundo//
-set backupdir=$HOME/.vim/.vimbackup//
-set directory=$HOME/.vim/.vimswap//
-set viewdir=$HOME/.vim/.vimviews//
+set undodir=$HOME/.vim/.vimundo
 
+" Duh
+syntax enable
+
+" Make our internal Vim contents directories
 silent execute '!mkdir -p $HOME/.vim/.vimbackup'
 silent execute '!mkdir -p $HOME/.vim/.vimswap'
 silent execute '!mkdir -p $HOME/.vim/.vimviews'
 silent execute '!mkdir -p $HOME/.vim/.vimundo'
-au BufWinLeave * silent! mkview
-au BufWinEnter * silent! loadview
 
-set tabpagemax=15
-set showmode
+" Set command line info at bottom of screen 
 if has ('cmdline_info')
   set ruler
   set showcmd
 endif
 
-set backspace=indent,eol,start
-set linespace=0
-set nu
-set showmatch
+" Set characters to wrap 
 set whichwrap=b,s,h,l,<,>,[,]
+
+" Set scrolling boundaries
 set scrolljump=5
 set scrolloff=3
+
+" Set folding options
 set foldenable
 set foldmethod=indent
 set foldlevel=99
 
-let asmsyntax="nasm"
+" General autocmd settings
+autocmd BufWinLeave * silent! mkview
+autocmd BufWinEnter * silent! loadview
+autocmd FileType * let b:comment = "#"
 
+" Set sandbox files as scheme
 autocmd BufNewFile,BufRead *.sb set filetype=scheme
-autocmd BufNewFile,BufRead *.m set filetype=objc
+autocmd FileType scheme set ts=2 sw=2 expandtab smarttab
+
+" We likes our arm assembly
 autocmd BufNewFile,BufRead *.s let asmsytnax='armasm'|let filetype_inc='armasm'
 autocmd BufNewFile,BufRead *.asm let asmsytnax='nasm'
-autocmd BufNewFile,BufRead *.py set ts=4 sw=4 expandtab smarttab autoindent
-autocmd FileType * set noexpandtab
-autocmd FileType c,cpp,objc set ts=4 sw=4 expandtab smarttab cindent
-autocmd FileType javascript set ts=4 sw=4 expandtab smarttab cindent
-autocmd FileType python set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType asm set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType nasm set ts=4 sw=4 expandtab smarttab autoindent
-autocmd FileType c set formatoptions+=ro
-autocmd FileType html set ts=4 sw=4 expandtab smarttab
-autocmd FileType sh set ts=4 sw=4 expandtab smarttab
-autocmd FileType make set noexpandtab sw=8
-autocmd FileType scheme set ts=2 sw=2 expandtab smarttab
-autocmd FileType ruby set ts=4 sw=4 expandtab smarttab autoindent
-
-autocmd FileType * let b:comment = "#"
 autocmd FileType asm let b:comment = ";"
 autocmd FileType nasm let b:comment = ";"
-autocmd FileType vim let b:comment = "\""
+
+" C-like settings
+autocmd BufNewFile,BufRead *.m set filetype=objc
+autocmd FileType c,cpp,objc set ts=4 sw=4 expandtab smarttab cindent
+autocmd FileType c set formatoptions+=ro
 autocmd FileType c let b:comment = '\/\/'
-autocmd FileType javascript let b:comment = '\/\/'
 
+" Python settings
+autocmd FileType python set ts=4 sw=4 expandtab smarttab autoindent
 autocmd FileType python set omnifunc=pythoncomplete#Complete
+
+" JavaScript settings
+autocmd FileType javascript set ts=4 sw=4 expandtab smarttab cindent
+autocmd FileType javascript let b:comment = '\/\/'
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+
+" HTML settings
+autocmd FileType html set ts=4 sw=4 expandtab smarttab
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType ruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby let g:rubycomplete_buffer_loading=1
-autocmd FileType ruby let g:rubycomplete_classes_in_global=1
 
-let g:go_highlight_functions = 1  
-let g:go_highlight_methods = 1  
-let g:go_highlight_structs = 1  
-let g:go_highlight_operators = 1  
-let g:go_highlight_build_constraints = 1 
+" Shell settings
+autocmd FileType sh set ts=4 sw=4 expandtab smarttab
 
-set wmh=0
-map <C-H> <C-W>h<C-W>_
-map <C-L> <C-W>l<C-W>_
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
+" Makefile settings
+autocmd FileType make set noexpandtab sw=8
 
-nmap - <C-_><C-_>
-vmap - <C-_><C-_>
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
 
-let mapleader = ","
-nmap <leader>ne :NERDTree<cr>
-nmap <leader>nc :NERDTreeClose
-nmap <silent> <leader>/ :nohlsearch<CR>
-nmap <leader>h :tabprevious<cr>
-nmap <leader>l :tabnext<cr>
-nmap <leader>o :tabnew<cr>
-nmap <leader>c :tabclose<cr>
+" Declare the list of plugins.
+Plug 'scrooloose/nerdtree'
+Plug 'Shirk/vim-gas'
+Plug 'compnerd/arm64asm-vim'
+Plug 'b4winckler/vim-objc'
+Plug 'fatih/vim-go'
+Plug 'msanders/cocoa.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'keith/swift.vim'
+Plug 'tmsvg/pear-tree'
+Plug 'ycm-core/YouCompleteMe'
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
 
-function! ConditionalPairMap(open, close)
-	let line = getline('.')
-	let col = col('.')
-	if col < col('$') || stridx(line, a:close, col + 1) != -1
-		return a:open
-	else
-		return a:open . a:close . repeat("\<left>", len(a:close))
-	endif
-endf
-inoremap <expr> ( ConditionalPairMap('(', ')')
-inoremap <expr> { ConditionalPairMap('{', '}')
-inoremap <expr> [ ConditionalPairMap('[', ']')
-"inoremap <expr> " ConditionalPairMap('"', '"')
-"inoremap "	""<Left>
-inoremap {<CR>	{<CR>}<Esc>O
-
-nnoremap ; : 
-
-cmap w!! w !sudo tee % >/dev/null
-
-func AddComment()
-  return ':s/^\(\s*\)/\1' . b:comment . "/\r:nohl\r"
-endfunc
-
-func RemoveComment()
-  return ':s/^\(\s*\)/' . b:comment . "/\\1/\r:nohl\r"
-endfunc
-
-if has("unix")
-  let s:uname = system("uname -s")
-  if s:uname == "Darwin"
-    hi Normal ctermbg=16
-    colorscheme phil 
-  else
-    colorscheme default
-endif
-endif
-vnoremap <C-c> "+y
-"set background=dark
-" let g:ycm_global_ycm_extra_conf = "~/projects/dev/darwin_extra_conf.py" 
+"
+" YouCompleteMe options
+"
+" Don't ask for extraconf
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_extra_conf_vim_data = [ '&filetype' ]
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
 
+" Include filetype in extra conf data
+let g:ycm_extra_conf_vim_data = [ '&filetype' ]
+
+" Turn off the preview window
+let g:ycm_autoclose_preview_window_after_completion = 1
+
+" Turn off the preview window
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" Turn off annoying YCM diagnostic highlighting
+let g:ycm_enable_diagnostic_highlighting = 0
+
+" Shortcut for goto
 nnoremap <C-]> :YcmCompleter GoTo<CR>
 
+"
 autocmd CompleteDone * pclose
+
+" Get rid of the preview window
 set completeopt-=preview
-colorscheme phil

@@ -67,40 +67,21 @@ os=`uname`
 if [ $os = "Darwin" ];
 then
     export XC_PATH=`xcode-select -p`
-    export IOS_SDK="$XC_PATH/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
-    export OSX_SDK="$XC_PATH/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.sdk"
+    export IOS_SDK=`xcrun --sdk iphoneos --show-sdk-path`
+    export OSX_SDK=`xcrun --sdk macosx --show-sdk-path`
     export XC_DATA="$HOME/Library/Developer/Xcode/DerivedData"
-    alias isdk='xcrun --sdk iphoneos --show-sdk-path'
-    alias msdk='xcrun --sdk macosx --show-sdk-path'
 fi
 
-SWIFT_DIR=""
 if [ $os = "Darwin" ];
 then
     alias ls='ls -G'
-    export AVR="/Applications/Arduino.app/Contents/Java/hardware/tools/avr"
 else
     alias ls='ls --color'
-    export AVR="/usr/share/arduino/hardware/tools/avr"
-    SWIFT_DIR="/usr/local/swift/bin"
 fi
+
 export LOCAL_ROOT="$HOME"
 export LOCAL_BIN="$LOCAL_ROOT/bin"
-export AVR_BIN="$AVR/bin"
-export AVR_LIB="$AVR/avr/lib"
-export AVR_INC="$AVR/avr/include"
-export ANDROID_SDK_PATH="$LOCAL_BIN/Android/SDK"
-export ANDROID_NDK_PATH="$LOCAL_BIN/Android/NDK"
-export ANDROID_BUILD_TOOLS="$ANDROID_SDK_PATH/build-tools/23.0.3"
-export ANDROID_PLATFORM_TOOLS="$ANDROID_SDK_PATH/platform-tools"
-export ANDROID_TOOLS="$ANDROID_SDK_PATH/tools"
-export ANDROID_BIN="$ANDROID_BUILD_TOOLS:$ANDROID_PLATFORM_TOOLS:$ANDROID_TOOLS:$ANDROID_AARCH64_BIN:$ANDROID_ARM_BIN"
-export GOROOT="/usr/local/go/bin"
-export GOPATH="$HOME/go"
-export PATH="$LOCAL_BIN:/usr/local/bin:$PATH:$PI:$AVR_BIN:$ANDROID_BIN:$GOROOT:$GOPATH:$SWIFT_DIR"
-
-#export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-# export MANPATH="/usr/local/man:$MANPATH"
+export PATH="$LOCAL_BIN:/usr/local/bin:$PATH:$PI"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -175,6 +156,7 @@ then
     alias reboot='sudo reboot'
     alias halt='sudo halt'
 fi
+
 alias b='popd > /dev/null'
 alias flip='pushd_builtin'
 alias 2='python2'
