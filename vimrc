@@ -181,3 +181,46 @@ autocmd CompleteDone * pclose
 
 " Get rid of the preview window
 set completeopt-=preview
+
+" Configure NERDTree and other shortcuts
+let mapleader = " "
+nmap <leader>ne :NERDTree<cr>
+nmap <leader>nc :NERDTreeClose
+nmap <silent> <leader>/ :nohlsearch<CR>
+nmap <leader>h :tabprevious<cr>
+nmap <leader>l :tabnext<cr>
+nmap <leader>o :tabnew<cr>
+nmap <leader>c :tabclose<cr>
+
+" TODO: Comment stuff
+function! ConditionalPairMap(open, close)
+	let line = getline('.')
+	let col = col('.')
+	if col < col('$') || stridx(line, a:close, col + 1) != -1
+		return a:open
+	else
+		return a:open . a:close . repeat("\<left>", len(a:close))
+	endif
+endf
+inoremap <expr> ( ConditionalPairMap('(', ')')
+inoremap <expr> { ConditionalPairMap('{', '}')
+inoremap <expr> [ ConditionalPairMap('[', ']')
+"inoremap <expr> " ConditionalPairMap('"', '"')
+"inoremap "	""<Left>
+inoremap {<CR>	{<CR>}<Esc>O
+
+" TODO: WTF does all this do
+nnoremap ; : 
+
+cmap w!! w !sudo tee % >/dev/null
+
+func AddComment()
+  return ':s/^\(\s*\)/\1' . b:comment . "/\r:nohl\r"
+endfunc
+
+func RemoveComment()
+  return ':s/^\(\s*\)/' . b:comment . "/\\1/\r:nohl\r"
+endfunc
+nmap - <C-_><C-_>
+vmap - <C-_><C-_>
+vnoremap <C-c> "+y
