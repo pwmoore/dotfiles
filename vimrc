@@ -184,7 +184,7 @@ set completeopt-=preview
 
 " Configure NERDTree and other shortcuts
 let mapleader = " "
-nmap <leader>ne :NERDTree<cr>
+nmap <leader>t :NERDTree<cr>
 nmap <leader>nc :NERDTreeClose
 nmap <silent> <leader>/ :nohlsearch<CR>
 nmap <leader>h :tabprevious<cr>

@@ -79,9 +79,9 @@ else
     alias ls='ls --color'
 fi
 
-export LOCAL_ROOT="$HOME"
+export LOCAL_ROOT="$HOME/.local_root/"
 export LOCAL_BIN="$LOCAL_ROOT/bin"
-export PATH="$LOCAL_BIN:/usr/local/bin:$PATH:$PI"
+export PATH="$LOCAL_BIN:$HOME/go/bin:/usr/local/bin:$PATH:"
 
 source $ZSH/oh-my-zsh.sh
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 install_file ()
 {
 	old_file=$HOME/.$1
@@ -42,24 +43,21 @@ install_homebrew()
 	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 }
 
-install_python()
+install_pyenv()
 {
-	echo "[X] Unsupported"
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
 }
 
-fn_distro(){
-	arch=$(uname -m)
-	kernel=$(uname -r)
-	if [ -f /etc/lsb-release ]; then
-			os=$(lsb_release -s -d)
-	elif [ -f /etc/debian_version ]; then
-			os="Debian $(cat /etc/debian_version)"
-	elif [ -f /etc/redhat-release ]; then
-			os=`cat /etc/redhat-release`
-	else
-			os="$(uname -s) $(uname -r)"
-	fi
+install_python()
+{
+    install_pyenv
+    pip3 install IPython
 }
+
+os=""
 py=""
 get_python()
 {
@@ -85,7 +83,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="git ack build-essential libclang-10-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev libc6-i386 gcc-multilib mercurial subversion graphviz libpxman-1-dev bison flex"
+    debs="git build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev mercurial subversion graphviz libpixman-1-dev bison flex ripgrep golang"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -97,7 +95,7 @@ install_debian()
 
 install_linux()
 {
-    distro=`"$py" -c "import platform; print(platform.linux_distribution()[0])"`
+    distro=`cat /etc/lsb-release | grep DISTRIB_ID | cut -d '=' -f 2`
 	case $distro in
 		Ubuntu|debian|LinuxMint)
 			install_debian
@@ -132,7 +130,7 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="zsh reattach-to-user-namespace git libimobiledevice cmake cscope python3 ctags tmux qemu usbmuxd ack"
+	formulae="zsh reattach-to-user-namespace git libimobiledevice cmake cscope python3 ctags tmux qemu usbmuxd ripgrep go"
 
 	brew install $formulae
 }
@@ -151,16 +149,6 @@ install_ycm()
 {
     cd ~/.vim/plugged/YouCompleteMe
     ./install.py --clang-completer
-    cd $cur_dir
-}
-
-install_color_coded()
-{
-    cd ~/.vim/bundle/color_coded
-	mkdir build && cd build
-	cmake ..
-	make && make install
-	make clean && make clean_clang
     cd $cur_dir
 }
 
@@ -183,34 +171,42 @@ install_gef()
     wget -q -O- https://github.com/hugsy/gef/raw/master/scripts/gef.sh | sh
 }
 
-install_cku()
+install_rust()
 {
-    mkdir -p "$HOME/git"
-    cd "$HOME/git"
-    git clone https://github.com/keystone-engine/keystone
-    cd keystone
-    mkdir build
-    cd build
-    ../make-share.sh
-    sudo make install
-    cd "$HOME/git"
-    git clone https://github.com/unicorn-engine/unicorn
-    cd unicorn
-    mkdir build
-    make.sh
-    sudo make.sh install
-    cd "$HOME/git"
-    git clone https://github.com/aquynh/capstone
-    cd capstone
-    make.sh
-    sudo make.sh install
-    cd $cur_dir
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+}
+
+install_unix_tools()
+{
+    cargo install git-delta procs fd-find du-dust bat
+    go install github.com/rs/curlie@latest
+    go install github.com/muesli/duf@latest
+
+}
+
+install_ipsw()
+{
+    echo "[+] Attempting to install ipsw"
+    case $os in
+        Linux)
+            which snap
+            if [ $? -eq 0 ];
+            then
+                sudo snap install ipsw
+            fi
+            ;;
+        Darwin)
+            brew install blacktop/tap/ipsw
+            ;;
+        *)
+        ;;
+    esac
 }
 
 get_python
+os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 cur_dir="$PWD"
 
-os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
 xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
 
 ssh_dir="$HOME/.ssh"
@@ -257,10 +253,12 @@ done
 
 install_vim
 install_ycm
-#install_color_coded
 install_tpm
 install_omz
-#install_cku
+install_python
+install_rust
+install_unix_tools
+install_ipsw
 git config --global core.editor "vim"
 
 source $HOME/.zshrc
