@@ -83,7 +83,7 @@ install_fedora()
 install_debian()
 {
     sudo apt update
-    debs="git build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev mercurial subversion graphviz libpixman-1-dev bison flex ripgrep golang"
+    debs="git build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev mercurial subversion graphviz libpixman-1-dev bison flex ripgrep"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
@@ -174,6 +174,7 @@ install_gef()
 install_rust()
 {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    source "$HOME/.cargo/env"
 }
 
 install_unix_tools()
