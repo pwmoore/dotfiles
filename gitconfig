@@ -1,0 +1,35 @@
+[core]
+	editor = vim
+	autocrlf = false
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[add.interactive]
+	useBuiltin = false
+
+[delta]
+	navigate = true
+	light = false
+
+[merge]
+	conflictStyle = diff3
+
+[diff]
+	colorMoved = default
+
+[user]
+	email = pmoore64@gatech.edu
+	name = Phil Moore
+
+[credential]
+	helper = store
+
+[alias]
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	tree = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
+	undo = reset HEAD~1 --mixed
+	res = !git reset --hard
+
