@@ -1,45 +1,10 @@
 #!/usr/bin/env bash
 
+repo=$HOME/dotfiles.git
 ssh_dir="$HOME/.ssh"
-if [ ! -e $ssh_dir ];
-then
-    mkdir -p $ssh_dir
-fi
-
-if [ ! -e $ssh_dir/id_rsa ];
-then
-    ssh-keygen -f $ssh_dir/id_rsa -N ""
-fi
-
-
 cur_dir="$PWD"
 py=""
 distro=""
-
-if [ $INSTALL_OS != "" ];
-then
-    os=$INSTALL_OS
-else
-    os=`uname`
-fi
-
-if [ $os = "Darwin" ];
-then
-    install_darwin
-elif [ $os = "Linux" ];
-then
-    detect_distro
-    install_linux
-elif [ $os = "OpenBSD" ];
-    install_openbsd
-then
-elif [ $os = "FreeBSD" ];
-then
-    install_freebsd
-else
-    echo "[X] Unknown OS $os"
-    exit 1
-fi
 
 detect_distro ()
 {
@@ -52,7 +17,6 @@ detect_distro ()
     fi
 }
 
-repo=$HOME/dotfiles.git
 
 clone_repo()
 {
@@ -178,8 +142,8 @@ install_linux()
 
 install_freebsd()
 {
-	echo "[X] FreeBSD is not supported"
-    exit
+    pkg -y
+    pkg install -y sudo python3 vim git zsh wget htop ripgrep bat rust delta duf cmake tmux bison flex py39-setuptools py39-pip
 }
 
 install_openbsd()
@@ -279,6 +243,44 @@ install_ipsw()
         ;;
     esac
 }
+
+if [ ! -e $ssh_dir ];
+then
+    mkdir -p $ssh_dir
+fi
+
+if [ ! -e $ssh_dir/id_rsa ];
+then
+    ssh-keygen -f $ssh_dir/id_rsa -N ""
+fi
+
+
+
+if [ $INSTALL_OS != "" ];
+then
+    os=$INSTALL_OS
+else
+    os=`uname`
+fi
+
+if [ $os = "Darwin" ];
+then
+    install_darwin
+elif [ $os = "Linux" ];
+then
+    detect_distro
+    install_linux
+elif [ $os = "OpenBSD" ];
+    install_openbsd
+then
+elif [ $os = "FreeBSD" ];
+then
+    install_freebsd
+else
+    echo "[X] Unknown OS $os"
+    exit 1
+fi
+
 
 case $os in
 	Linux)
