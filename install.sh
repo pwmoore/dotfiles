@@ -1,5 +1,63 @@
 #!/usr/bin/env bash
 
+ssh_dir="$HOME/.ssh"
+if [ ! -e $ssh_dir ];
+then
+    mkdir -p $ssh_dir
+fi
+
+if [ ! -e $ssh_dir/id_rsa ];
+then
+    ssh-keygen -f $ssh_dir/id_rsa -N ""
+fi
+
+
+cur_dir="$PWD"
+py=""
+distro=""
+
+if [ $INSTALL_OS != "" ];
+then
+    os=$INSTALL_OS
+else
+    os=`uname`
+fi
+
+if [ $os = "Darwin" ];
+then
+    install_darwin
+elif [ $os = "Linux" ];
+then
+    detect_distro
+    install_linux
+elif [ $os = "OpenBSD" ];
+    install_openbsd
+then
+elif [ $os = "FreeBSD" ];
+then
+    install_freebsd
+else
+    echo "[X] Unknown OS $os"
+    exit 1
+fi
+
+detect_distro ()
+{
+    if [ -e "/etc/os-release" ];
+    then
+        distro_name="`cat /etc/os-release | grep NAME | cut -d'"' -f 2`"
+    else
+        echo "[X] Could not find /etc/os-release. Run again with INSTALL_OS environment variable set to appropriate OS"
+        exit 1
+    fi
+}
+
+repo=$HOME/dotfiles.git
+
+clone_repo()
+{
+    git clone https://github.com/pwmoore/dotfiles.git $repo
+}
 
 install_file ()
 {
@@ -57,8 +115,6 @@ install_python()
     pip3 install IPython
 }
 
-os=""
-py=""
 get_python()
 {
 	py=`which python`	
@@ -68,7 +124,7 @@ get_python()
 	fi
 }
 
-install_fedora()
+install_rhel()
 {
 	packages="git zsh ack cmake kernel-headers-`uname -r` tmux python python-pip ctags vim"
     sudo dnf install -y $packages
@@ -76,35 +132,46 @@ install_fedora()
     then
         echo "[+] Installed $packages"
     else
-        echo "[X] Could not install debs!"
+        echo "[X] Could not install packages!"
+        exit 1
     fi
+    clone_repo
 }
 
 install_debian()
 {
+    linux_headers=""
+    apt-cache search "linux-headers-`uname -r`" | grep linux-headers
+    if [ $? -eq 0 ];
+    then 
+        linux_headers="linux-headers-`uname -r`"
+    fi
+
     sudo apt update
-    debs="git build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data linux-headers-`uname -r` python-dev python3 python3-dev python3-pip tmux vim curl exuberant-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev mercurial subversion graphviz libpixman-1-dev bison flex ripgrep"
+    debs="git build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data python3 python3-dev python3-pip tmux vim curl universal-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev mercurial subversion graphviz libpixman-1-dev bison flex ripgrep $linux_headers"
     sudo apt install -y $debs
     if [ $? -eq 0 ];
     then
         echo "[+] Installed $debs"
     else
         echo "[X] Could not install debs!"
+        exit 1
     fi
+    clone_repo
 }
 
 install_linux()
 {
-    distro=`cat /etc/lsb-release | grep DISTRIB_ID | cut -d '=' -f 2`
 	case $distro in
-		Ubuntu|debian|LinuxMint)
+		Ubuntu|Debian GNU/Linux|Linux Mint)
 			install_debian
 			;;
-		Fedora)
-			install_fedora
+		Fedora|Rocky Linux|Red Hat Enterprise Linux)
+			install_rhel
 			;;
 		*)
 			echo "[X] $distro is not supported"
+            exit 1
 			;;
 	esac
 }
@@ -112,16 +179,25 @@ install_linux()
 install_freebsd()
 {
 	echo "[X] FreeBSD is not supported"
+    exit
 }
 
 install_openbsd()
 {
-    echo "[X] OpenBSD is not supported"
+    pkg_add install python3 vim git zsh wget colorls htop ripgrep bat rust delta duf
 }
 
 install_darwin()
 {
     xcode-select --install
+    xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
+    clone_repo
+    if [ -e $xcode_themes ];
+    then
+        cp $repo/Xcode.dvtcolortheme $xcode_themes
+    else
+        "[!] No $xcode_themes directory! Could not install Xcode.dvtcolortheme!"
+    fi
 	install_homebrew
 	if [ $? -ne 0 ];
 	then
@@ -130,7 +206,7 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="zsh reattach-to-user-namespace git libimobiledevice cmake cscope python3 ctags tmux qemu usbmuxd ripgrep go"
+	formulae="zsh reattach-to-user-namespace libimobiledevice cmake cscope ctags tmux qemu usbmuxd ripgrep go universal-ctags wget htop subversion mercurial"
 
 	brew install $formulae
 }
@@ -140,7 +216,7 @@ install_vim()
     mkdir -p $HOME/.vim/autoload
 	mkdir -p $HOME/.vim/bundle
 	mkdir -p $HOME/.vim/colors
-    cp phil.vim $HOME/.vim/colors/phil.vim
+    cp $repo/phil.vim $HOME/.vim/colors/phil.vim
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     vim +PlugInstall +qall
 }
@@ -161,8 +237,8 @@ install_tpm()
 install_omz()
 { 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-    cp zshrc $HOME/.zshrc
-    cp phil.zsh-theme ~/.oh-my-zsh/themes
+    cp $repo/zshrc $HOME/.zshrc
+    cp $repo/phil.zsh-theme ~/.oh-my-zsh/themes
     source $HOME/.zshrc
 }
 
@@ -204,23 +280,6 @@ install_ipsw()
     esac
 }
 
-get_python
-os=`$py -c "import platform; print(platform.platform().split('-')[0])"`
-cur_dir="$PWD"
-
-xcode_themes=$HOME/Library/Developer/Xcode/FontAndColorThemes
-
-ssh_dir="$HOME/.ssh"
-if [ ! -e $ssh_dir ];
-then
-    mkdir -p $ssh_dir
-fi
-
-if [ ! -e $ssh_dir/id_rsa ];
-then
-    ssh-keygen -f $ssh_dir/id_rsa -N ""
-fi
-
 case $os in
 	Linux)
 		files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
@@ -230,13 +289,6 @@ case $os in
 	Darwin)
 		install_darwin
         files=(zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py)
-        "[+] Copied OS X vim colorscheme to $HOME/.vim/colors"
-		if [ -e $xcode_themes ];
-		then
-			cp Xcode.dvtcolortheme $xcode_themes
-		else
-			"[!] No $xcode_themes directory! Could not install Xcode.dvtcolortheme!"
-		fi
 		;;
 	FreeBSD)
 		install_freebsd
@@ -249,7 +301,7 @@ esac
 
 for f in ${files[@]}
 do
-	install $f
+	install $repo/$f
 done
 
 install_vim
