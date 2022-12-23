@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 repo=$HOME/dotfiles.git
 ssh_dir="$HOME/.ssh"
