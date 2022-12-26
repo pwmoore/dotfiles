@@ -10,7 +10,7 @@ detect_distro ()
 {
     if [ -e "/etc/os-release" ];
     then
-        distro_name="`cat /etc/os-release | grep -w NAME | cut -d'"' -f 2`"
+        distro="`cat /etc/os-release | grep -w NAME | cut -d'"' -f 2`"
     else
         echo "[X] Could not find /etc/os-release. Run again with INSTALL_OS environment variable set to appropriate OS"
         exit 1
