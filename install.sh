@@ -10,7 +10,7 @@ detect_distro ()
 {
     if [ -e "/etc/os-release" ];
     then
-        distro_name="`cat /etc/os-release | grep NAME | cut -d'"' -f 2`"
+        distro_name="`cat /etc/os-release | grep -w NAME | cut -d'"' -f 2`"
     else
         echo "[X] Could not find /etc/os-release. Run again with INSTALL_OS environment variable set to appropriate OS"
         exit 1
@@ -127,10 +127,10 @@ install_debian()
 install_linux()
 {
 	case $distro in
-		Ubuntu|Debian GNU/Linux|Linux Mint)
+		"Ubuntu"|"Debian GNU/Linux"|"Linux Mint")
 			install_debian
 			;;
-		Fedora|Rocky Linux|Red Hat Enterprise Linux)
+		"Fedora"|"Rocky Linux"|"Red Hat Enterprise Linux")
 			install_rhel
 			;;
 		*)
@@ -255,12 +255,11 @@ then
 fi
 
 
-
-if [ $INSTALL_OS != "" ];
+if [ -z "$INSTALL_OS" ];
 then
-    os=$INSTALL_OS
-else
     os=`uname`
+else
+    os=$INSTALL_OS
 fi
 
 if [ $os = "Darwin" ];
@@ -271,8 +270,8 @@ then
     detect_distro
     install_linux
 elif [ $os = "OpenBSD" ];
-    install_openbsd
 then
+    install_openbsd
 elif [ $os = "FreeBSD" ];
 then
     install_freebsd
