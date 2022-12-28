@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-repo=$HOME/dotfiles.git
+repo=$HOME/dotfiles
 ssh_dir="$HOME/.ssh"
 cur_dir="$PWD"
 py=""
@@ -20,7 +20,7 @@ detect_distro ()
 
 clone_repo()
 {
-    git clone https://github.com/pwmoore/dotfiles.git $repo
+    git clone https://github.com/pwmoore/dotfiles.git
 }
 
 install_file ()
