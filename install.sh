@@ -300,5 +300,4 @@ install_unix_tools
 install_ipsw
 git config --global core.editor "vim"
 
-. $HOME/.zshrc
 cd $cur_dir
