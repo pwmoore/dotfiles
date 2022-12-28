@@ -265,28 +265,28 @@ fi
 
 if [ $os = "Darwin" ];
 then
-    files=(zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py)
+    files='zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py'
     install_darwin
 elif [ $os = "Linux" ];
 then
-    files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
+    files='zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py'
     detect_distro
     install_linux
     install_gef
 elif [ $os = "OpenBSD" ];
 then
-    files=(zshrc ycm_extra_conf.py bashrc profile gdbinit vimrc tmux.conf)
+    files='zshrc ycm_extra_conf.py bashrc profile gdbinit vimrc tmux.conf'
     install_openbsd
 elif [ $os = "FreeBSD" ];
 then
-    files=(zshrc ycm_extra_conf.py bashrc profile gdbinit vimrc tmux.conf)
+    files='zshrc ycm_extra_conf.py bashrc profile gdbinit vimrc tmux.conf'
     install_freebsd
 else
     echo "[X] Unknown OS $os"
     exit 1
 fi
 
-for f in ${files[@]}
+for f in $files
 do
 	install $repo/$f
 done
