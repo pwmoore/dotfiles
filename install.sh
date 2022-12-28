@@ -204,7 +204,6 @@ install_omz()
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     cp $repo/zshrc $HOME/.zshrc
     cp $repo/phil.zsh-theme ~/.oh-my-zsh/themes
-    source $HOME/.zshrc
 }
 
 install_gef()
@@ -215,14 +214,14 @@ install_gef()
 install_rust()
 {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    source "$HOME/.cargo/env"
+    . "$HOME/.cargo/env"
 }
 
 install_unix_tools()
 {
     cargo install git-delta procs fd-find du-dust bat
-    go install github.com/rs/curlie@latest
-    go install github.com/muesli/duf@latest
+    #go install github.com/rs/curlie@latest
+    #go install github.com/muesli/duf@latest
 
 }
 
@@ -301,5 +300,5 @@ install_unix_tools
 install_ipsw
 git config --global core.editor "vim"
 
-source $HOME/.zshrc
+. $HOME/.zshrc
 cd $cur_dir
