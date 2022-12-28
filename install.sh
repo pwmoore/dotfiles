@@ -25,7 +25,7 @@ clone_repo()
 
 install_file ()
 {
-	old_file=$1
+	old_file="$HOME/.`basename $1`"
 	backup="$old_file.bak"
 	if [ -e $old_file ];
 	then
@@ -38,7 +38,7 @@ install_file ()
 
 install_dir()
 {
-	old_dir=$1
+	old_dir="$HOME/.`basename $1`"
 	backup="$old_dir.bak"
 	if [ -e $old_dir ];
 	then
