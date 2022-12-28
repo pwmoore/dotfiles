@@ -265,41 +265,26 @@ fi
 
 if [ $os = "Darwin" ];
 then
+    files=(zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py)
     install_darwin
 elif [ $os = "Linux" ];
 then
+    files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
     detect_distro
     install_linux
+    install_gef
 elif [ $os = "OpenBSD" ];
 then
+    files=(zshrc ycm_extra_conf.py bashrc profile gdbinit vimrc tmux.conf)
     install_openbsd
 elif [ $os = "FreeBSD" ];
 then
+    files=(zshrc ycm_extra_conf.py bashrc profile gdbinit vimrc tmux.conf)
     install_freebsd
 else
     echo "[X] Unknown OS $os"
     exit 1
 fi
-
-
-case $os in
-	Linux)
-		files=(zshrc bashrc gdbinit vimrc tmux.conf ycm_extra_conf.py)
-		install_linux
-        install_gef
-		;;
-	Darwin)
-		install_darwin
-        files=(zshrc bashrc profile vimrc xvimrc tmux.conf ycm_extra_conf.py)
-		;;
-	FreeBSD)
-		install_freebsd
-		files=(bashrc profile gdbinit vimrc tmux.conf)
-		;;
-
-	*)
-	;;
-esac
 
 for f in ${files[@]}
 do
