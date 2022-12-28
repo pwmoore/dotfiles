@@ -29,6 +29,9 @@ ZSH_THEME="phil"
 # Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="true"
 
+# Ignore corrections for files that start with .
+CORRECT_IGNORE_FILE=".*"
+
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
 
@@ -67,12 +70,15 @@ os=`uname`
 if [ $os = "Darwin" ];
 then
     export XC_PATH=`xcode-select -p`
-    export IOS_SDK=`xcrun --sdk iphoneos --show-sdk-path`
+    if [ -e `xcrun --sdk iphoneos --show-sdk-path` ];
+    then
+        export IOS_SDK=`xcrun --sdk iphoneos --show-sdk-path`
+    fi
     export OSX_SDK=`xcrun --sdk macosx --show-sdk-path`
     export XC_DATA="$HOME/Library/Developer/Xcode/DerivedData"
 fi
 
-if [ $os = "Darwin" ];
+if [ $os = "Darwin" ] || [ $os = "FreeBSD" ] || [ $os = "OpenBSD" ];
 then
     alias ls='ls -G'
 else
@@ -81,7 +87,7 @@ fi
 
 export LOCAL_ROOT="$HOME/.local_root/"
 export LOCAL_BIN="$LOCAL_ROOT/bin"
-export PATH="$LOCAL_BIN:$HOME/go/bin:/usr/local/bin:$PATH:"
+export PATH="$LOCAL_BIN:$HOME/go/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH:"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -116,14 +122,52 @@ alias egrep='egrep --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+# Sort by file size
+if [ $os = Linux ];
+then
+    alias lt='ls --human-readable --size -1 -S --classify'
+else
+    alias lt='du -sh * | sort -h'
+fi
+
 alias grep='grep --color=auto'
+
+# Shortcut for grep
 alias g='grep'
+
+# Shortcut for case insensitive grep
 alias gi='grep -i'
+
+# Shortcut for recursive grep
 alias gr='grep -R'
+
+# Shortcut for case insensitive recursive grep
+alias gri="grep -iR"
+
+# Have mkdir always create intermediate paths
 alias mkdir='mkdir -p -v'
+
+# Have ping send 5 pings by default
 alias ping='ping -c 5'
+
+# Shortcut to re-source this file
 alias s='source ~/.zshrc'
+
+# Have hexdump use -C by default
 alias hexdump='hexdump -C'
+
+# Create a Python virtual environment
+alias ve='python3 -m venv ./venv'
+
+# Activate a Python virtual environment
+alias va='source ./venv/bin/activate'
+
+# Shortcut for vim
+alias v="vim"
+
+# Sudo shortcut for vim
+alias V="sudo vim"
 
 pushd ()
 {
@@ -163,6 +207,8 @@ alias 2='python2'
 alias 3='python3'
 alias py='ipython3'
 alias clone='git clone --recursive'
+alias push='git push origin'
+alias pull='git pull origin'
 
 export LSCOLORS="Exfxcxdxbxegedabagacad"
 export LS_COLORS="$LS_COLORS:ow=1;34:tw=1;34:"
