@@ -25,8 +25,8 @@ clone_repo()
 
 install_file ()
 {
-	old_file=$HOME/.$1
-	backup=${old_file}.bak_
+	old_file=$1
+	backup="$old_file.bak"
 	if [ -e $old_file ];
 	then
 		cp $old_file $backup
@@ -38,15 +38,15 @@ install_file ()
 
 install_dir()
 {
-	old_dir=$HOME/.$1
-	backup=${old_dir}.bak
+	old_dir=$1
+	backup="$old_dir.bak"
 	if [ -e $old_dir ];
 	then
 		mv $old_dir $backup
 	fi
 
 	cp -r $1 $HOME
-	mv $HOME/$1 $old_dir
+	mv $1 $old_dir
 	echo "[+] Installed $1 to $old_dir"
 }
 
