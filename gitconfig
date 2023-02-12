@@ -19,10 +19,6 @@
 [diff]
 	colorMoved = default
 
-[user]
-	email = pmoore64@gatech.edu
-	name = Phil Moore
-
 [credential]
 	helper = store
 
@@ -32,4 +28,3 @@
 	br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
 	undo = reset HEAD~1 --mixed
 	res = !git reset --hard
-
