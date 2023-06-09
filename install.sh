@@ -178,6 +178,11 @@ install_darwin()
 
 install_vim()
 {
+    if [ -e $HOME/.vim/plugged/YouCompleteMe ];
+    then
+        return
+    fi
+
     mkdir -p $HOME/.vim/autoload
 	mkdir -p $HOME/.vim/bundle
 	mkdir -p $HOME/.vim/colors
@@ -189,7 +194,7 @@ install_vim()
 install_ycm()
 {
     cd ~/.vim/plugged/YouCompleteMe
-    ./install.py --clang-completer
+    ./install.py --clangd-completer
     cd $cur_dir
 }
 
@@ -213,6 +218,11 @@ install_gef()
 
 install_rust()
 {
+    which rustc
+    if [ $? -eq 0 ];
+    then
+        return
+    fi
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     . "$HOME/.cargo/env"
 }

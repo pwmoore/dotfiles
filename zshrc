@@ -38,7 +38,7 @@ COMPLETION_WAITING_DOTS="true"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -85,7 +85,7 @@ else
     alias ls='ls --color'
 fi
 
-export LOCAL_ROOT="$HOME/.local_root/"
+export LOCAL_ROOT="$HOME/.local/"
 export LOCAL_BIN="$LOCAL_ROOT/bin"
 export PATH="$LOCAL_BIN:$HOME/go/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH:"
 
@@ -149,7 +149,7 @@ alias gri="grep -iR"
 alias mkdir='mkdir -p -v'
 
 # Have ping send 5 pings by default
-alias ping='ping -c 5'
+alias ping5='ping -c 5'
 
 # Shortcut to re-source this file
 alias s='source ~/.zshrc'
