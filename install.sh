@@ -171,9 +171,23 @@ install_darwin()
 		exit $ret
 	fi
 
-	formulae="zsh reattach-to-user-namespace libimobiledevice cmake cscope ctags tmux qemu usbmuxd ripgrep go universal-ctags wget htop subversion mercurial"
+	formulae="cmake cscope ctags tmux ripgrep universal-ctags wget htop asdf"
 
 	brew install $formulae
+
+    defaults write -g com.apple.mouse.scaling 10.0
+    defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+    defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+    defaults write com.apple.Safari UniversalSearchEnabled -bool false
+    defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+
+    keybindings="${HOME}/Library/KeyBindings"
+    if [ ! -e "${keybindings}" ];
+    then
+        mkdir -p "${keybindings}"
+    fi
+    cp DefaultKeyBinding.dict "${keybindings}"
 }
 
 install_vim()

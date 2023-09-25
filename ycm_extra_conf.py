@@ -64,7 +64,7 @@ def get_lang_flags(filetype):
     return cppflags
   elif filetype == 'objc':
     return objcflags
-  elif filetype == 'objcpp'
+  elif filetype == 'objcpp':
     return objcppflags
   else:
     return []
@@ -197,26 +197,26 @@ def Settings( **kwargs ):
     # in the corresponding source file.
     filename = FindCorrespondingSourceFile( kwargs[ 'filename' ] )
 
-  log = YCMLogger(True)
-  data = kwargs['client_data']
-  filetype = data['&filetype']
-  base_flags = ['-Wall', ]
+    log = YCMLogger(True)
+    data = kwargs['client_data']
+    filetype = data['&filetype']
+    base_flags = ['-Wall', ]
 
-  if IsHeaderFile(filename):
-    filetype = GetFileTypeForHeader(filename)
+    if IsHeaderFile(filename):
+      filetype = GetFileTypeForHeader(filename)
 
-  filetype_flags = get_lang_flags(filetype)
-  log.write('Got filetype flags')
+    filetype_flags = get_lang_flags(filetype)
+    log.write('Got filetype flags')
 
-  platform_flags = get_platform_flags()
-  log.write('Got platform flags')
-  flags = base_flags + filetype_flags + platform_flags
-  flags = get_project_conf(flags)
+    platform_flags = get_platform_flags()
+    log.write('Got platform flags')
+    flags = base_flags + filetype_flags + platform_flags
+    flags = get_project_conf(flags)
 
-  relative_to = DirectoryOfThisScript()
-  final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
-  for f in final_flags:
-    log.write(f)
+    relative_to = DirectoryOfThisScript()
+    final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
+    for f in final_flags:
+      log.write(f)
 
 
     return {
