@@ -113,7 +113,7 @@ install_debian()
 
     
     sudo apt update
-    debs="git zip unzip build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils libpthread-workqueue-dev cmake-data python3 python3-dev python3-pip tmux vim curl universal-ctags zsh gparted openssh-server htop libbsd-dev swig libedit-dev libreadline-dev doxygen libglib2.0-dev libgraphite2-dev libxml2-dev mercurial subversion graphviz libpixman-1-dev bison gdb samba flex ripgrep $linux_headers"
+    debs="git zip unzip build-essential clang libclang-dev libncurses-dev libz-dev cmake xz-utils cmake-data python3 python3-dev python3-pip tmux vim-nox curl universal-ctags zsh gparted openssh-server htop libbsd-dev libedit-dev libreadline-dev libglib2.0-dev libgraphite2-dev libxml2-dev bison gdb samba flex ripgrep $linux_headers"
     DEBIAN_FRONTEND=noniteractive sudo -E apt install -y $debs
     if [ $? -eq 0 ];
     then
